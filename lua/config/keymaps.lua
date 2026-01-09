@@ -19,6 +19,13 @@ local shift_selection = function()
   -- vim.keymap.set("v", "tc", "gcgv", { silent = false })
 end
 
+local alt_move_line = function()
+  vim.keymap.set("n", "<A-Up>", ":m .-2<CR>==")
+  vim.keymap.set("n", "<A-Down>", ":m .+1<CR>==")
+  vim.keymap.set("v", "<A-Up>", ":m '<-2<CR>gv=gv")
+  vim.keymap.set("v", "<A-Down>", ":m '>+1<CR>gv=gv")
+end
+
 local telescope_keymaps = function()
   local telescope = require("telescope")
   local fb_actions = telescope.extensions.file_browser.actions;
@@ -149,6 +156,7 @@ end
 
 return {
   enable_shift_selection = shift_selection,
+  enable_alt_move_line = alt_move_line,
   enable_telescope_keymaps = telescope_keymaps,
   enable_gitsigns_keymaps = gitsigns_keymaps,
 }

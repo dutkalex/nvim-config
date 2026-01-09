@@ -1,15 +1,12 @@
--- local telescope = require('telescope')
 local pickers = require("telescope.pickers")
 local finders = require("telescope.finders")
 local sorters = require("telescope.sorters")
 local make_entry = require("telescope.make_entry")
 local conf = require("telescope.config").values
--- local actions = require('telescope.actions')
--- local action_state = require('telescope.actions.state')
 
 local utils = require("config.utils")
 
-local live_multigrep = function(opts)
+local find_code = function(opts)
   opts = opts or {}
   opts.cwd = opts.cwd or utils.find_git_root()
 
@@ -43,11 +40,11 @@ local live_multigrep = function(opts)
 
   pickers.new(opts, {
     debounce = 100,
-    prompt_title = "Multi Grep",
+    prompt_title = "Find Code",
     finder = finder,
     previewer = conf.grep_previewer(opts),
     sorter = sorters.empty(),
   }):find()
 end
 
-return live_multigrep
+return find_code

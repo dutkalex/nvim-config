@@ -81,9 +81,11 @@ vim.diagnostic.config({
 
 -- Colorscheme
 vim.cmd [[colorscheme tokyonight]]
+require('lualine').setup()
 
--- Line numbers
-vim.opt.number = true
+-- Left bar
+vim.opt.number = true -- line numbers
+vim.opt.signcolumn = "yes" -- always display sign column
 
 -- Use system clipboard
 vim.opt.clipboard = "unnamedplus"
@@ -106,6 +108,7 @@ vim.api.nvim_create_autocmd("FileType", {
 -- Keymaps
 local keymaps = require("config.keymaps")
 keymaps.enable_shift_selection()
+keymaps.enable_alt_move_line()
 keymaps.enable_telescope_keymaps()
 keymaps.enable_gitsigns_keymaps()
 

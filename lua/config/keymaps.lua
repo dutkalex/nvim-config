@@ -62,6 +62,7 @@ local telescope_keymaps = function()
   local find_file = function()
     local opts = telescope_themes.get_ivy({})
     opts.cwd = utils.find_git_root()
+    opts.hidden = true
     telescope_builtin.find_files(opts)
   end
   vim.keymap.set("n", "ff", find_file, { desc = "[F]ind [F]ile" })
@@ -72,21 +73,29 @@ local telescope_keymaps = function()
   end
   vim.keymap.set("n", "fc", find_code, { desc = "[F]ind [C]ode"})
 
-  vim.keymap.set("n", "fd", telescope_builtin.lsp_definitions, { desc = "[F]ind [D]efinitions" })
+  vim.keymap.set("n", "fd", function() telescope_builtin.lsp_definitions({ jump_type = "never" }) end, { desc = "[F]ind [D]efinitions" })
 
-  vim.keymap.set("n", "fr", telescope_builtin.lsp_references, { desc = "[F]ind [R]eferences" })
+  vim.keymap.set("n", "fr", function() telescope_builtin.lsp_references({ jump_type = "never" }) end, { desc = "[F]ind [R]eferences" })
 
   local find_neovim = function()
     local opts = { cwd = vim.fn.stdpath("config") }
     telescope_builtin.find_files(opts)
   end
-  vim.keymap.set("n", "fn", find_neovim, { desc = "[F]ind [N]eovim configuration files" })
+  vim.keymap.set("n", "fn", find_neovim, { desc = "[F]ind [N]eovim configuration file" })
 
   local find_help = function()
     local opts = telescope_themes.get_ivy({})
     telescope_builtin.help_tags(opts)
   end
   vim.keymap.set("n", "fh", find_help, { desc = "[F]ind [H]elp" })
+
+end
+
+local diagnostics_keymaps = function()
+  local telescope_builtin = require('telescope.builtin')
+  vim.keymap.set('n', 'dl', function() telescope_builtin.diagnostics({ bufnr = 0 }) end, { desc = "[D]iagnostics [L]ist" })
+  vim.keymap.set('n', 'de', vim.diagnostic.open_float, { desc = '[D]iagnostic [E]xtend' })
+  vim.keymap.set('n', 'df', vim.lsp.buf.code_action, { desc = '[D]iagnostic [F]ix'})
 end
 
 local gitsigns_keymaps = function()
@@ -158,5 +167,6 @@ return {
   enable_shift_selection = shift_selection,
   enable_alt_move_line = alt_move_line,
   enable_telescope_keymaps = telescope_keymaps,
+  enable_diagnostics_keymaps = diagnostics_keymaps,
   enable_gitsigns_keymaps = gitsigns_keymaps,
 }

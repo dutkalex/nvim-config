@@ -1,33 +1,4 @@
--- Bootstrap lazy.nvim
-local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
-if not (vim.uv or vim.loop).fs_stat(lazypath) then
-  local lazyrepo = "https://github.com/folke/lazy.nvim.git"
-  local out = vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
-  if vim.v.shell_error ~= 0 then
-    vim.api.nvim_echo({
-      { "Failed to clone lazy.nvim:\n", "ErrorMsg" },
-      { out, "WarningMsg" },
-      { "\nPress any key to exit..." },
-    }, true, {})
-    vim.fn.getchar()
-    os.exit(1)
-  end
-end
-vim.opt.rtp:prepend(lazypath)
-
--- Make sure to setup `mapleader` and `maplocalleader` before
--- loading lazy.nvim so that mappings are correct.
--- This is also a good place to setup other settings (vim.opt)
-vim.g.mapleader = " "
-vim.g.maplocalleader = "\\"
-
--- Setup lazy.nvim
-require("lazy").setup({
-  spec = {
-    { import = "plugins" },
-  },
-  checker = { enabled = true },
-})
+require("config.lazy")
 
 -- Treesitter setup
 require('nvim-treesitter').install({
@@ -76,15 +47,16 @@ vim.lsp.config.clangd = {
 vim.lsp.enable({'clangd'})
 
 vim.diagnostic.config({
-  virtual_text = { current_line = true },
+  virtual_lines = { current_line = true },
 })
 
 -- Colorscheme
-vim.cmd [[colorscheme tokyonight]]
+vim.cmd.colorscheme("tokyonight")
 require('lualine').setup()
 
 -- Left bar
 vim.opt.number = true -- line numbers
+vim.opt.scrolloff = 8 -- keep at least 8 lines between the cursor and the top/bottom
 vim.opt.signcolumn = "yes" -- always display sign column
 
 -- Use system clipboard
@@ -110,7 +82,5 @@ local keymaps = require("config.keymaps")
 keymaps.enable_shift_selection()
 keymaps.enable_alt_move_line()
 keymaps.enable_telescope_keymaps()
+keymaps.enable_diagnostics_keymaps()
 keymaps.enable_gitsigns_keymaps()
-
-vim.keymap.set('n', 'ed', vim.diagnostic.open_float)
-vim.keymap.set('n', 'df', vim.lsp.buf.code_action)

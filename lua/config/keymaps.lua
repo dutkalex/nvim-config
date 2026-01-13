@@ -15,8 +15,6 @@ local shift_selection = function()
   vim.keymap.set("i", "<S-Down>",  "<Esc>v<Down>",  { silent = true })
   vim.keymap.set("i", "<S-Left>",  "<Esc>v<Left>",  { silent = true })
   vim.keymap.set("i", "<S-Right>", "<Esc>v<Right>", { silent = true })
-
-  -- vim.keymap.set("v", "tc", "gcgv", { silent = false })
 end
 
 local alt_move_line = function()
@@ -39,12 +37,12 @@ local telescope_keymaps = function()
           ["n"] = {
             ["<C-n>"] = fb_actions.create,
             ["<C-r>"] = fb_actions.rename,
-            -- ["<C-d>"] = fb_actions.delete,
+            ["<C-d>"] = fb_actions.remove,
           },
           ["i"] = {
             ["<C-n>"] = fb_actions.create,
             ["<C-r>"] = fb_actions.rename,
-            -- ["<C-d>"] = fb_actions.delete,
+            ["<C-d>"] = fb_actions.remove,
           }
         }
       },
@@ -92,6 +90,10 @@ local telescope_keymaps = function()
   end
   vim.keymap.set("n", "fh", find_help, { desc = "[F]ind [H]elp" })
 
+  local find_keymap = function()
+    telescope_builtin.keymaps()
+  end
+  vim.keymap.set("n", "fk", find_keymap, { desc = "[F]ind [K]eymap" })
 end
 
 local display_diagnostics = true

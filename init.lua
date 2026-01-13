@@ -66,11 +66,34 @@ vim.api.nvim_create_autocmd("FileType", {
 vim.cmd.colorscheme("tokyonight")
 
 -- Indentation line
-require('mini.indentscope').setup({
+local indentscope = require("mini.indentscope")
+
+indentscope.setup({
   symbol = '|',
   animation = function(s, n) return 1 end,
 })
 vim.api.nvim_set_hl(0, "MiniIndentscopeSymbol", { link = "Comment" })
+
+vim.api.nvim_create_autocmd("CursorMoved", {
+  callback = function()
+    -- local ok, node = pcall(vim.treesitter.get_node)
+    -- if not ok then
+    --   print("fail!")
+    --   return
+    -- end
+    -- if not node then
+    --   print("no node!")
+    --   return
+    --end
+    -- if node:type() == "comment" then
+    --   indentscope.undraw()
+    --   vim.b.miniindentscope_disable = true
+    -- else
+    --   indentscope.draw()
+    --   vim.b.miniindentscope_disable = false
+    -- end
+  end,
+})
 
 -- Status bar
 require('lualine').setup()
@@ -90,3 +113,12 @@ keymaps.enable_alt_move_line()
 keymaps.enable_telescope_keymaps()
 keymaps.enable_diagnostics_keymaps()
 keymaps.enable_gitsigns_keymaps()
+
+-- Command line
+-- noice = require('config.noice')
+-- noice.setup()
+-- local lualine_cmd_fg = vim.api.nvim_get_hl(0, { name = "LualineCommand" }).foreground
+-- local lualine_cmd_bg = vim.api.nvim_get_hl(0, { name = "LualineCommand" }).background
+--
+-- vim.api.nvim_set_hl(0, "NoiceCmdlinePopup", { fg = lualine_cmd_fg, bg = lualine_cmd_bg, bold = true })
+-- vim.api.nvim_set_hl(0, "NoiceCmdlinePopupBorder", { fg = lualine_cmd_bg, bg = lualine_cmd_bg })

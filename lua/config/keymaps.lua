@@ -63,7 +63,7 @@ local telescope_keymaps = function()
     local opts = telescope_themes.get_ivy({})
     opts.cwd = utils.find_git_root()
     opts.hidden = true
-    telescope_builtin.find_files(opts)
+    telescope_builtin.git_files(opts)
   end
   vim.keymap.set("n", "ff", find_file, { desc = "[F]ind [F]ile" })
 

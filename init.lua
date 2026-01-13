@@ -24,9 +24,6 @@ vim.lsp.config['lua_ls'] = {
         version = 'LuaJIT',
         path = vim.split(package.path, ';'),
       },
-      -- diagnostics = {
-      --   globals = { 'vim' },
-      -- },
       workspace = {
         library = vim.api.nvim_get_runtime_file("", true),
         checkThirdParty = false,
@@ -50,18 +47,6 @@ vim.diagnostic.config({
   virtual_lines = { current_line = true },
 })
 
--- Colorscheme
-vim.cmd.colorscheme("tokyonight")
-require('lualine').setup()
-
--- Left bar
-vim.opt.number = true -- line numbers
-vim.opt.scrolloff = 8 -- keep at least 8 lines between the cursor and the top/bottom
-vim.opt.signcolumn = "yes" -- always display sign column
-
--- Use system clipboard
-vim.opt.clipboard = "unnamedplus"
-
 -- Indentation
 vim.opt.expandtab = true
 vim.opt.tabstop = 4
@@ -76,6 +61,27 @@ vim.api.nvim_create_autocmd("FileType", {
     vim.opt_local.softtabstop = 2
   end,
 })
+
+-- Colorscheme
+vim.cmd.colorscheme("tokyonight")
+
+-- Indentation line
+require('mini.indentscope').setup({
+  symbol = '|',
+  animation = function(s, n) return 1 end,
+})
+vim.api.nvim_set_hl(0, "MiniIndentscopeSymbol", { link = "Comment" })
+
+-- Status bar
+require('lualine').setup()
+
+-- Left bar
+vim.opt.number = true -- line numbers
+vim.opt.scrolloff = 8 -- keep at least 8 lines between the cursor and the top/bottom
+vim.opt.signcolumn = "yes" -- always display sign column
+
+-- Use system clipboard
+vim.opt.clipboard = "unnamedplus"
 
 -- Keymaps
 local keymaps = require("config.keymaps")

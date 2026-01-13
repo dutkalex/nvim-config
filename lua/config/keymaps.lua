@@ -38,9 +38,13 @@ local telescope_keymaps = function()
         mappings = {
           ["n"] = {
             ["<C-n>"] = fb_actions.create,
+            ["<C-r>"] = fb_actions.rename,
+            -- ["<C-d>"] = fb_actions.delete,
           },
           ["i"] = {
             ["<C-n>"] = fb_actions.create,
+            ["<C-r>"] = fb_actions.rename,
+            -- ["<C-d>"] = fb_actions.delete,
           }
         }
       },
@@ -50,6 +54,7 @@ local telescope_keymaps = function()
 
   local telescope_themes = require("telescope.themes")
   local telescope_builtin = require('telescope.builtin')
+  local custom_finds = require("config.custom-finds")
 
   local file_browser = function()
     local opts = {
@@ -61,15 +66,13 @@ local telescope_keymaps = function()
 
   local find_file = function()
     local opts = telescope_themes.get_ivy({})
-    opts.cwd = utils.find_git_root()
-    opts.hidden = true
-    telescope_builtin.git_files(opts)
+    custom_finds.find_files(opts)
   end
   vim.keymap.set("n", "ff", find_file, { desc = "[F]ind [F]ile" })
 
   local find_code = function()
     local opts = telescope_themes.get_ivy({})
-    require("config.telescope-multigrep")(opts)
+    custom_finds.find_code(opts)
   end
   vim.keymap.set("n", "fc", find_code, { desc = "[F]ind [C]ode"})
 
@@ -91,11 +94,19 @@ local telescope_keymaps = function()
 
 end
 
+local display_diagnostics = true
+local toggle_diagnostics = function()
+  display_diagnostics = not display_diagnostics
+  vim.diagnostic.config({ virtual_lines = display_diagnostics })
+end
+
 local diagnostics_keymaps = function()
   local telescope_builtin = require('telescope.builtin')
   vim.keymap.set('n', 'dl', function() telescope_builtin.diagnostics({ bufnr = 0 }) end, { desc = "[D]iagnostics [L]ist" })
   vim.keymap.set('n', 'de', vim.diagnostic.open_float, { desc = '[D]iagnostic [E]xtend' })
   vim.keymap.set('n', 'df', vim.lsp.buf.code_action, { desc = '[D]iagnostic [F]ix'})
+  vim.keymap.set('n', 'ds', toggle_diagnostics, { desc = "[D]iagnostic [S]how" })
+  toggle_diagnostics() -- off by default
 end
 
 local gitsigns_keymaps = function()

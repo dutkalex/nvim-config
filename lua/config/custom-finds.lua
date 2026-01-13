@@ -1,3 +1,4 @@
+local telescope_builtin = require("telescope.builtin")
 local pickers = require("telescope.pickers")
 local finders = require("telescope.finders")
 local sorters = require("telescope.sorters")
@@ -5,6 +6,13 @@ local make_entry = require("telescope.make_entry")
 local conf = require("telescope.config").values
 
 local utils = require("config.utils")
+
+local find_files = function(opts)
+  opts = opts or {}
+  opts.cwd = opts.cwd or utils.find_git_root()
+  opts.find_command = { "rg", "--files", "--hidden", "--glob", "!.git/*" }
+  telescope_builtin.find_files(opts)
+end
 
 local find_code = function(opts)
   opts = opts or {}
@@ -47,4 +55,7 @@ local find_code = function(opts)
   }):find()
 end
 
-return find_code
+return {
+  find_files = find_files,
+  find_code = find_code,
+}

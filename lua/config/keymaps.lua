@@ -68,6 +68,12 @@ local telescope_keymaps = function()
   end
   vim.keymap.set("n", "ff", find_file, { desc = "[F]ind [F]ile" })
 
+  local find_recent_file = function()
+    local opts = telescope_themes.get_ivy({})
+    telescope_builtin.oldfiles(opts)
+  end
+  vim.keymap.set("n", "frf", find_recent_file, { desc = "[F]ind [R]ecent [F]ile" })
+
   local find_code = function()
     local opts = telescope_themes.get_ivy({})
     custom_finds.find_code(opts)

@@ -114,6 +114,8 @@ keymaps.enable_telescope_keymaps()
 keymaps.enable_diagnostics_keymaps()
 keymaps.enable_gitsigns_keymaps()
 
+vim.keymap.set("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
+
 -- Command line
 -- noice = require('config.noice')
 -- noice.setup()

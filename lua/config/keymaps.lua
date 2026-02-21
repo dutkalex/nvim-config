@@ -74,6 +74,12 @@ local telescope_keymaps = function()
   end
   vim.keymap.set("n", "frf", find_recent_file, { desc = "[F]ind [R]ecent [F]ile" })
 
+  local find_neovim = function()
+    local opts = { cwd = vim.fn.stdpath("config") }
+    telescope_builtin.find_files(opts)
+  end
+  vim.keymap.set("n", "fnf", find_neovim, { desc = "[F]ind [N]eovim configuration [F]ile" })
+
   local find_code = function()
     local opts = telescope_themes.get_ivy({})
     custom_finds.find_code(opts)
@@ -83,12 +89,6 @@ local telescope_keymaps = function()
   vim.keymap.set("n", "fd", function() telescope_builtin.lsp_definitions({ jump_type = "never" }) end, { desc = "[F]ind [D]efinitions" })
 
   vim.keymap.set("n", "fr", function() telescope_builtin.lsp_references({ jump_type = "never" }) end, { desc = "[F]ind [R]eferences" })
-
-  local find_neovim = function()
-    local opts = { cwd = vim.fn.stdpath("config") }
-    telescope_builtin.find_files(opts)
-  end
-  vim.keymap.set("n", "fn", find_neovim, { desc = "[F]ind [N]eovim configuration file" })
 
   local find_help = function()
     local opts = telescope_themes.get_ivy({})

@@ -106,6 +106,11 @@ vim.opt.signcolumn = "yes" -- always display sign column
 -- Use system clipboard
 vim.opt.clipboard = "unnamedplus"
 
+-- Terminal
+local terminal = require("config.terminal")
+vim.keymap.set("n", "mt", terminal.create_mini_terminal, { desc = "Open a new [M]ini [T]erminal" })
+vim.keymap.set("t", "<esc><esc>", "<c-\\><c-n>:q<CR>") -- double escape to close the mini terminal
+
 -- Keymaps
 local keymaps = require("config.keymaps")
 keymaps.enable_shift_selection()

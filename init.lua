@@ -74,27 +74,6 @@ indentscope.setup({
 })
 vim.api.nvim_set_hl(0, "MiniIndentscopeSymbol", { link = "Comment" })
 
-vim.api.nvim_create_autocmd("CursorMoved", {
-  callback = function()
-    -- local ok, node = pcall(vim.treesitter.get_node)
-    -- if not ok then
-    --   print("fail!")
-    --   return
-    -- end
-    -- if not node then
-    --   print("no node!")
-    --   return
-    --end
-    -- if node:type() == "comment" then
-    --   indentscope.undraw()
-    --   vim.b.miniindentscope_disable = true
-    -- else
-    --   indentscope.draw()
-    --   vim.b.miniindentscope_disable = false
-    -- end
-  end,
-})
-
 -- Status bar
 require('lualine').setup()
 
@@ -106,18 +85,118 @@ vim.opt.signcolumn = "yes" -- always display sign column
 -- Use system clipboard
 vim.opt.clipboard = "unnamedplus"
 
+-- Keymaps
+local telescope_builtin = require('telescope.builtin')
+local custom_finds = require("config.custom-finds")
+
+-- Find commands
+vim.keymap.set("n", "ff", custom_finds.find_files, { desc = "[F]ind [F]ile" })
+vim.keymap.set("n", "frf", telescope_builtin.oldfiles, { desc = "[F]ind [R]ecent [F]ile" })
+vim.keymap.set("n", "fnf", custom_finds.find_neovim_config_files, { desc = "[F]ind [N]eovim configuration [F]ile" })
+vim.keymap.set("n", "fc", custom_finds.find_code, { desc = "[F]ind [C]ode"})
+vim.keymap.set("n", "fd", function() telescope_builtin.lsp_definitions({ jump_type = "never" }) end, { desc = "[F]ind [D]efinitions" })
+vim.keymap.set("n", "fr", function() telescope_builtin.lsp_references({ jump_type = "never" }) end, { desc = "[F]ind [R]eferences" })
+vim.keymap.set("n", "fh", telescope_builtin.help_tags, { desc = "[F]ind [H]elp" })
+vim.keymap.set("n", "fk", telescope_builtin.keymaps, { desc = "[F]ind [K]eymap" })
+
+-- Oil file navigation
+vim.keymap.set("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
+
 -- Terminal
 local terminal = require("config.terminal")
 vim.keymap.set("n", "mt", terminal.create_mini_terminal, { desc = "Open a new [M]ini [T]erminal" })
 vim.keymap.set("t", "<esc><esc>", "<c-\\><c-n>:q<CR>") -- double escape to close the mini terminal
 
--- Keymaps
-local keymaps = require("config.keymaps")
-keymaps.enable_shift_selection()
-keymaps.enable_alt_move_line()
-keymaps.enable_telescope_keymaps()
-keymaps.enable_diagnostics_keymaps()
-keymaps.enable_gitsigns_keymaps()
+-- Shift selection
+vim.keymap.set("n", "<S-Up>",    "v<Up>",    { silent = true })
+vim.keymap.set("n", "<S-Down>",  "v<Down>",  { silent = true })
+vim.keymap.set("n", "<S-Left>",  "v<Left>",  { silent = true })
+vim.keymap.set("n", "<S-Right>", "v<Right>", { silent = true })
 
--- Oil file navigation
-vim.keymap.set("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
+vim.keymap.set("v", "<S-Up>",    "<Up>",    { silent = true })
+vim.keymap.set("v", "<S-Down>",  "<Down>",  { silent = true })
+vim.keymap.set("v", "<S-Left>",  "<Left>",  { silent = true })
+vim.keymap.set("v", "<S-Right>", "<Right>", { silent = true })
+
+vim.keymap.set("i", "<S-Up>",    "<Esc>v<Up>",    { silent = true })
+vim.keymap.set("i", "<S-Down>",  "<Esc>v<Down>",  { silent = true })
+vim.keymap.set("i", "<S-Left>",  "<Esc>v<Left>",  { silent = true })
+vim.keymap.set("i", "<S-Right>", "<Esc>v<Right>", { silent = true })
+
+-- Alt line moves
+vim.keymap.set("n", "<A-Up>", ":m .-2<CR>==")
+vim.keymap.set("n", "<A-Down>", ":m .+1<CR>==")
+vim.keymap.set("v", "<A-Up>", ":m '<-2<CR>gv=gv")
+vim.keymap.set("v", "<A-Down>", ":m '>+1<CR>gv=gv")
+
+-- Diagnostics
+vim.keymap.set('n', 'dl', function() telescope_builtin.diagnostics({ bufnr = 0 }) end, { desc = "[D]iagnostics [L]ist" })
+vim.keymap.set('n', 'de', vim.diagnostic.open_float, { desc = '[D]iagnostic [E]xtend' })
+vim.keymap.set('n', 'df', vim.lsp.buf.code_action, { desc = '[D]iagnostic [F]ix'})
+
+local display_diagnostics = true
+local toggle_diagnostics = function()
+  display_diagnostics = not display_diagnostics
+  vim.diagnostic.config({ virtual_lines = display_diagnostics })
+end
+vim.keymap.set('n', 'ds', toggle_diagnostics, { desc = "[D]iagnostic [S]how" })
+toggle_diagnostics() -- off by default
+
+-- Git
+local gitsigns = require('gitsigns')
+gitsigns.setup({
+  -- signs = {
+  --   add          = { text = '┃' },
+  --   change       = { text = '┃' },
+  --   delete       = { text = '_' },
+  --   topdelete    = { text = '‾' },
+  --   changedelete = { text = '~' },
+  --   untracked    = { text = '┆' },
+  -- },
+  -- signs_staged = {
+  --   add          = { text = '┃' },
+  --   change       = { text = '┃' },
+  --   delete       = { text = '_' },
+  --   topdelete    = { text = '‾' },
+  --   changedelete = { text = '~' },
+  --   untracked    = { text = '┆' },
+  -- },
+  -- signs_staged_enable = true,
+  -- signcolumn = true,  -- Toggle with `:Gitsigns toggle_signs`
+  -- numhl      = false, -- Toggle with `:Gitsigns toggle_numhl`
+  -- linehl     = false, -- Toggle with `:Gitsigns toggle_linehl`
+  -- word_diff  = false, -- Toggle with `:Gitsigns toggle_word_diff`
+  -- watch_gitdir = {
+  --   follow_files = true
+  -- },
+  -- auto_attach = true,
+  -- attach_to_untracked = false,
+  current_line_blame = true, -- Toggle with `:Gitsigns toggle_current_line_blame`
+  current_line_blame_opts = {
+    -- virt_text = true,
+    virt_text_pos = 'right_align', -- 'eol' | 'overlay' | 'right_align'
+    delay = 200,
+    -- ignore_whitespace = false,
+    -- virt_text_priority = 100,
+    -- use_focus = true,
+  },
+  -- current_line_blame_formatter = '<author>, <author_time:%R> - <summary>',
+  -- sign_priority = 6,
+  -- update_debounce = 100,
+  -- status_formatter = nil, -- Use default
+  -- max_file_length = 40000, -- Disable if file is longer than this (in lines)
+  preview_config = { -- Options passed to nvim_open_win
+    border = 'rounded',
+    style = 'minimal',
+    relative = 'cursor',
+    row = 0,
+    col = 1
+  },
+})
+gitsigns.toggle_current_line_blame() -- disable by default
+
+vim.keymap.set("n", "gd", gitsigns.preview_hunk_inline)
+-- vim.keymap.set("n", "ga", gitsigns.stage_hunk)
+-- vim.keymap.set("n", "gr", gitsigns.reset_hunk)
+-- vim.keymap.set("n", "gwd", "<cmd>Gitsigns toggle_word_diff<CR>")
+vim.keymap.set("n", "gbl", "<cmd>Gitsigns toggle_current_line_blame<CR>")

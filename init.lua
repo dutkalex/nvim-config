@@ -200,3 +200,28 @@ vim.keymap.set("n", "gd", gitsigns.preview_hunk_inline)
 -- vim.keymap.set("n", "gr", gitsigns.reset_hunk)
 -- vim.keymap.set("n", "gwd", "<cmd>Gitsigns toggle_word_diff<CR>")
 vim.keymap.set("n", "gbl", "<cmd>Gitsigns toggle_current_line_blame<CR>")
+
+-- Strip whitespaces on save
+vim.api.nvim_create_autocmd("BufWritePre", {
+  pattern = "*",
+  callback = function()
+    local start_line = vim.api.nvim_buf_get_mark(0, "[")[1]
+    local end_line = vim.api.nvim_buf_get_mark(0, "]")[1]
+
+    if start_line == 0 or end_line == 0 then
+      return
+    end
+
+    local view = vim.fn.winsaveview()
+
+    for i = start_line - 1, end_line - 1 do
+      local line = vim.api.nvim_buf_get_lines(0, i, i + 1, false)[1]
+      local stripped = line:gsub("%s+$", "")
+      if stripped ~= line then
+        vim.api.nvim_buf_set_lines(0, i, i + 1, false, { stripped })
+      end
+    end
+
+    vim.fn.winrestview(view)
+  end,
+})

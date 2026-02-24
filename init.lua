@@ -81,9 +81,7 @@ require('lualine').setup()
 vim.opt.number = true -- line numbers
 vim.opt.scrolloff = 8 -- keep at least 8 lines between the cursor and the top/bottom
 vim.opt.signcolumn = "yes" -- always display sign column
-
--- Use system clipboard
-vim.opt.clipboard = "unnamedplus"
+vim.opt.clipboard = "unnamedplus" -- Use system clipboard
 
 -- Keymaps
 local telescope_builtin = require('telescope.builtin')

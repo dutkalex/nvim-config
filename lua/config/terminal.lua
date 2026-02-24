@@ -20,7 +20,7 @@ local function create_floating_window(opts)
     row = row,
     style = "minimal",
     border = "rounded",
-    title = "Mini Terminal",
+    title = opts.title,
     title_pos = "center",
   }
 
@@ -30,7 +30,7 @@ local function create_floating_window(opts)
 end
 
 local create_mini_terminal = function()
-  local new_term = create_floating_window()
+  local new_term = create_floating_window({ title = "Mini Terminal" })
   if vim.bo[new_term.buf].buftype ~= "terminal" then
     vim.cmd.terminal()
     vim.cmd("startinsert")

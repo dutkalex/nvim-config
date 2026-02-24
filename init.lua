@@ -124,8 +124,13 @@ vim.keymap.set("i", "<S-Right>", "<Esc>v<Right>", { silent = true })
 -- Alt line moves
 vim.keymap.set("n", "<A-Up>", ":m .-2<CR>==")
 vim.keymap.set("n", "<A-Down>", ":m .+1<CR>==")
+
 vim.keymap.set("v", "<A-Up>", ":m '<-2<CR>gv=gv")
 vim.keymap.set("v", "<A-Down>", ":m '>+1<CR>gv=gv")
+
+-- Tab indents
+vim.keymap.set("v", "<Tab>", ">gv")
+vim.keymap.set("v", "<S-Tab>", "<gv")
 
 -- Diagnostics
 vim.keymap.set('n', 'dl', function() telescope_builtin.diagnostics({ bufnr = 0 }) end, { desc = "[D]iagnostics [L]ist" })
@@ -151,28 +156,30 @@ vim.keymap.set("n", "gd", gitsigns.preview_hunk_inline)
 vim.keymap.set("n", "gbl", "<cmd>Gitsigns toggle_current_line_blame<CR>")
 
 -- Strip whitespaces on save
+local format_diffs = function()
+  local start_line = vim.api.nvim_buf_get_mark(0, "[")[1]
+  local end_line = vim.api.nvim_buf_get_mark(0, "]")[1]
+
+  if start_line == 0 or end_line == 0 then
+    return
+  end
+
+  local view = vim.fn.winsaveview()
+
+  for i = start_line - 1, end_line - 1 do
+    local line = vim.api.nvim_buf_get_lines(0, i, i + 1, false)[1]
+    local stripped = line:gsub("%s+$", "")
+    if stripped ~= line then
+      vim.api.nvim_buf_set_lines(0, i, i + 1, false, { stripped })
+    end
+  end
+
+  vim.fn.winrestview(view)
+end
+
 vim.api.nvim_create_autocmd("BufWritePre", {
   pattern = "*",
-  callback = function()
-    local start_line = vim.api.nvim_buf_get_mark(0, "[")[1]
-    local end_line = vim.api.nvim_buf_get_mark(0, "]")[1]
-
-    if start_line == 0 or end_line == 0 then
-      return
-    end
-
-    local view = vim.fn.winsaveview()
-
-    for i = start_line - 1, end_line - 1 do
-      local line = vim.api.nvim_buf_get_lines(0, i, i + 1, false)[1]
-      local stripped = line:gsub("%s+$", "")
-      if stripped ~= line then
-        vim.api.nvim_buf_set_lines(0, i, i + 1, false, { stripped })
-      end
-    end
-
-    vim.fn.winrestview(view)
-  end,
+  callback = format_diffs,
 })
 
 highlight_trailing_whitespaces = function()

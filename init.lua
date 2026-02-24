@@ -47,8 +47,12 @@ vim.diagnostic.config({
   virtual_lines = { current_line = true },
 })
 
--- Indentation
-vim.opt.expandtab = true
+vim.opt.number = true -- line numbers
+vim.opt.scrolloff = 8 -- keep at least 8 lines between the cursor and the top/bottom
+vim.opt.signcolumn = "yes" -- always display sign column
+vim.opt.clipboard = "unnamedplus" -- Use system clipboard
+vim.opt.expandtab = true -- insert spaces instead of tabs
+
 vim.opt.tabstop = 4
 vim.opt.shiftwidth = 4
 vim.opt.softtabstop = 4
@@ -76,12 +80,6 @@ vim.api.nvim_set_hl(0, "MiniIndentscopeSymbol", { link = "Comment" })
 
 -- Status bar
 require('lualine').setup()
-
--- Left bar
-vim.opt.number = true -- line numbers
-vim.opt.scrolloff = 8 -- keep at least 8 lines between the cursor and the top/bottom
-vim.opt.signcolumn = "yes" -- always display sign column
-vim.opt.clipboard = "unnamedplus" -- Use system clipboard
 
 -- Find commands
 local telescope_builtin = require('telescope.builtin')
@@ -143,13 +141,9 @@ vim.keymap.set('n', 'df', vim.lsp.buf.code_action, { desc = '[D]iagnostic [F]ix'
 
 -- Git
 local gitsigns = require('gitsigns')
-gitsigns.toggle_current_line_blame() -- disable by default
-
-vim.keymap.set("n", "gd", gitsigns.preview_hunk_inline)
--- vim.keymap.set("n", "ga", gitsigns.stage_hunk)
--- vim.keymap.set("n", "gr", gitsigns.reset_hunk)
--- vim.keymap.set("n", "gwd", "<cmd>Gitsigns toggle_word_diff<CR>")
-vim.keymap.set("n", "gbl", "<cmd>Gitsigns toggle_current_line_blame<CR>")
+vim.keymap.set("n", "gd", gitsigns.preview_hunk_inline, { desc = "[G]it [D]iff" })
+vim.keymap.set("n", "ga", gitsigns.stage_hunk, { desc = "[G]it [A]dd" })
+vim.keymap.set("n", "gr", gitsigns.reset_hunk, { desc = "[G]it [R]eset" })
 
 local strip_diffs = function()
   local start_line = vim.api.nvim_buf_get_mark(0, "[")[1]

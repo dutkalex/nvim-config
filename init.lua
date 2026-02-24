@@ -119,13 +119,5 @@ keymaps.enable_telescope_keymaps()
 keymaps.enable_diagnostics_keymaps()
 keymaps.enable_gitsigns_keymaps()
 
+-- Oil file navigation
 vim.keymap.set("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
-
--- Command line
--- noice = require('config.noice')
--- noice.setup()
--- local lualine_cmd_fg = vim.api.nvim_get_hl(0, { name = "LualineCommand" }).foreground
--- local lualine_cmd_bg = vim.api.nvim_get_hl(0, { name = "LualineCommand" }).background
---
--- vim.api.nvim_set_hl(0, "NoiceCmdlinePopup", { fg = lualine_cmd_fg, bg = lualine_cmd_bg, bold = true })
--- vim.api.nvim_set_hl(0, "NoiceCmdlinePopupBorder", { fg = lualine_cmd_bg, bg = lualine_cmd_bg })

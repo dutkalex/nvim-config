@@ -83,11 +83,9 @@ vim.opt.scrolloff = 8 -- keep at least 8 lines between the cursor and the top/bo
 vim.opt.signcolumn = "yes" -- always display sign column
 vim.opt.clipboard = "unnamedplus" -- Use system clipboard
 
--- Keymaps
+-- Find commands
 local telescope_builtin = require('telescope.builtin')
 local custom_finds = require("config.custom-finds")
-
--- Find commands
 vim.keymap.set("n", "ff", custom_finds.find_files, { desc = "[F]ind [F]ile" })
 vim.keymap.set("n", "frf", telescope_builtin.oldfiles, { desc = "[F]ind [R]ecent [F]ile" })
 vim.keymap.set("n", "fnf", custom_finds.find_neovim_config_files, { desc = "[F]ind [N]eovim configuration [F]ile" })
@@ -133,17 +131,15 @@ vim.keymap.set("v", "<Tab>", ">gv")
 vim.keymap.set("v", "<S-Tab>", "<gv")
 
 -- Diagnostics
-vim.keymap.set('n', 'dl', function() telescope_builtin.diagnostics({ bufnr = 0 }) end, { desc = "[D]iagnostics [L]ist" })
-vim.keymap.set('n', 'de', vim.diagnostic.open_float, { desc = '[D]iagnostic [E]xtend' })
-vim.keymap.set('n', 'df', vim.lsp.buf.code_action, { desc = '[D]iagnostic [F]ix'})
-
-local display_diagnostics = true
+local display_diagnostics = false
 local toggle_diagnostics = function()
   display_diagnostics = not display_diagnostics
   vim.diagnostic.config({ virtual_lines = display_diagnostics })
 end
+
 vim.keymap.set('n', 'ds', toggle_diagnostics, { desc = "[D]iagnostic [S]how" })
-toggle_diagnostics() -- off by default
+vim.keymap.set('n', 'dl', function() telescope_builtin.diagnostics({ bufnr = 0 }) end, { desc = "[D]iagnostics [L]ist" })
+vim.keymap.set('n', 'df', vim.lsp.buf.code_action, { desc = '[D]iagnostic [F]ix'})
 
 -- Git
 local gitsigns = require('gitsigns')
@@ -155,8 +151,7 @@ vim.keymap.set("n", "gd", gitsigns.preview_hunk_inline)
 -- vim.keymap.set("n", "gwd", "<cmd>Gitsigns toggle_word_diff<CR>")
 vim.keymap.set("n", "gbl", "<cmd>Gitsigns toggle_current_line_blame<CR>")
 
--- Strip whitespaces on save
-local format_diffs = function()
+local strip_diffs = function()
   local start_line = vim.api.nvim_buf_get_mark(0, "[")[1]
   local end_line = vim.api.nvim_buf_get_mark(0, "]")[1]
 
@@ -177,10 +172,7 @@ local format_diffs = function()
   vim.fn.winrestview(view)
 end
 
-vim.api.nvim_create_autocmd("BufWritePre", {
-  pattern = "*",
-  callback = format_diffs,
-})
+vim.api.nvim_create_autocmd("BufWritePre", { pattern = "*", callback = strip_diffs })
 
 highlight_trailing_whitespaces = function()
   vim.cmd([[highlight ExtraWhitespace ctermbg=red guibg=red]])

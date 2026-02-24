@@ -1,5 +1,3 @@
-local utils = require("config.utils")
-
 local shift_selection = function()
   vim.keymap.set("n", "<S-Up>",    "v<Up>",    { silent = true })
   vim.keymap.set("n", "<S-Down>",  "v<Down>",  { silent = true })
@@ -25,52 +23,16 @@ local alt_move_line = function()
 end
 
 local telescope_keymaps = function()
-  local telescope = require("telescope")
-  local fb_actions = telescope.extensions.file_browser.actions;
-  telescope.setup({
-    extensions = {
-      file_browser = {
-        theme = "ivy",
-        hijack_netrw = true,
-        grouped = true,
-        mappings = {
-          ["n"] = {
-            ["<C-n>"] = fb_actions.create,
-            ["<C-r>"] = fb_actions.rename,
-            ["<C-d>"] = fb_actions.remove,
-          },
-          ["i"] = {
-            ["<C-n>"] = fb_actions.create,
-            ["<C-r>"] = fb_actions.rename,
-            ["<C-d>"] = fb_actions.remove,
-          }
-        }
-      },
-    },
-  })
-  telescope.load_extension("file_browser")
-
-  local telescope_themes = require("telescope.themes")
   local telescope_builtin = require('telescope.builtin')
   local custom_finds = require("config.custom-finds")
 
-  local file_browser = function()
-    local opts = {
-      cwd = utils.current_directory()
-    }
-    telescope.extensions.file_browser.file_browser(opts)
-  end
-  vim.keymap.set("n", "fb", file_browser, { desc = "[F]ile [B]rowser" })
-
   local find_file = function()
-    local opts = telescope_themes.get_ivy({})
-    custom_finds.find_files(opts)
+    custom_finds.find_files()
   end
   vim.keymap.set("n", "ff", find_file, { desc = "[F]ind [F]ile" })
 
   local find_recent_file = function()
-    local opts = telescope_themes.get_ivy({})
-    telescope_builtin.oldfiles(opts)
+    telescope_builtin.oldfiles()
   end
   vim.keymap.set("n", "frf", find_recent_file, { desc = "[F]ind [R]ecent [F]ile" })
 
@@ -81,8 +43,7 @@ local telescope_keymaps = function()
   vim.keymap.set("n", "fnf", find_neovim, { desc = "[F]ind [N]eovim configuration [F]ile" })
 
   local find_code = function()
-    local opts = telescope_themes.get_ivy({})
-    custom_finds.find_code(opts)
+    custom_finds.find_code()
   end
   vim.keymap.set("n", "fc", find_code, { desc = "[F]ind [C]ode"})
 
@@ -91,8 +52,7 @@ local telescope_keymaps = function()
   vim.keymap.set("n", "fr", function() telescope_builtin.lsp_references({ jump_type = "never" }) end, { desc = "[F]ind [R]eferences" })
 
   local find_help = function()
-    local opts = telescope_themes.get_ivy({})
-    telescope_builtin.help_tags(opts)
+    telescope_builtin.help_tags()
   end
   vim.keymap.set("n", "fh", find_help, { desc = "[F]ind [H]elp" })
 

@@ -61,8 +61,22 @@ local find_code = function(opts)
   }):find()
 end
 
+local find_definitions = function(opts)
+  opts = opts or {}
+  opts.jump_type = "never"
+  telescope_builtin.lsp_definitions(opts)
+end
+
+local find_references = function(opts)
+  opts = opts or {}
+  opts.jump_type = "never"
+  telescope_builtin.lsp_references(opts)
+end
+
 return {
   find_files = find_files,
   find_neovim_config_files = find_neovim_config_files,
   find_code = find_code,
+  find_definitions = find_definitions,
+  find_references = find_references,
 }

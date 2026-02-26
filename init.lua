@@ -47,11 +47,16 @@ vim.diagnostic.config({
   virtual_lines = { current_line = true },
 })
 
-vim.opt.number = true -- line numbers
-vim.opt.scrolloff = 8 -- keep at least 8 lines between the cursor and the top/bottom
-vim.opt.signcolumn = "yes" -- always display sign column
+vim.opt.number = true             -- line numbers
+vim.opt.scrolloff = 8             -- keep at least 8 lines between the cursor and the top/bottom
+vim.opt.signcolumn = "yes"        -- always display sign column
 vim.opt.clipboard = "unnamedplus" -- Use system clipboard
-vim.opt.expandtab = true -- insert spaces instead of tabs
+vim.opt.expandtab = true          -- insert spaces instead of tabs
+vim.opt.inccommand = "split"      -- show find-replaces live
+-- vim.opt.smartcase = true
+-- vim.opt.ignorecase = true
+vim.opt.splitbelow = true
+vim.opt.splitright = true
 
 vim.opt.tabstop = 4
 vim.opt.shiftwidth = 4
@@ -81,7 +86,16 @@ vim.api.nvim_set_hl(0, "MiniIndentscopeSymbol", { link = "Comment" })
 -- Status bar
 require('lualine').setup({
   sections = {
-    lualine_c = { { 'filename', path = 2, shorting_target = 40 } } -- Show full absolute path
+    lualine_c = { -- Show full absolute paths
+      {
+        'filename', path = 2, shorting_target = 40,
+        cond = function() return vim.bo.filetype ~= "oil" end
+      },
+      {
+        function() return vim.fn.fnamemodify(require("oil").get_current_dir(), ":p") end,
+        cond = function() return vim.bo.filetype == "oil" end,
+      }
+    }
   }
 })
 

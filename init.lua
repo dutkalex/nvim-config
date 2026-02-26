@@ -79,22 +79,36 @@ indentscope.setup({
 vim.api.nvim_set_hl(0, "MiniIndentscopeSymbol", { link = "Comment" })
 
 -- Status bar
-require('lualine').setup()
+require('lualine').setup({
+  sections = {
+    lualine_c = { { 'filename', path = 2, shorting_target = 40 } } -- Show full absolute path
+  }
+})
+
+-- Oil file navigation
+vim.keymap.set("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
 
 -- Find commands
 local telescope_builtin = require('telescope.builtin')
 local custom_finds = require("config.custom-finds")
-vim.keymap.set("n", "ff", custom_finds.find_files, { desc = "[F]ind [F]ile" })
-vim.keymap.set("n", "frf", telescope_builtin.oldfiles, { desc = "[F]ind [R]ecent [F]ile" })
-vim.keymap.set("n", "fnf", custom_finds.find_neovim_config_files, { desc = "[F]ind [N]eovim configuration [F]ile" })
-vim.keymap.set("n", "fc", custom_finds.find_code, { desc = "[F]ind [C]ode"})
-vim.keymap.set("n", "fd", custom_finds.find_definitions, { desc = "[F]ind [D]efinitions" })
-vim.keymap.set("n", "fr", custom_finds.find_references, { desc = "[F]ind [R]eferences" })
-vim.keymap.set("n", "fh", telescope_builtin.help_tags, { desc = "[F]ind [H]elp" })
-vim.keymap.set("n", "fk", telescope_builtin.keymaps, { desc = "[F]ind [K]eymap" })
 
--- Oil file navigation
-vim.keymap.set("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
+local disable_if_oil_buffer = function(fn)
+  return function()
+    if vim.bo.filetype == "oil" then
+      return
+    end
+    fn()
+  end
+end
+
+vim.keymap.set("n", "ff", disable_if_oil_buffer(custom_finds.find_files), { desc = "[F]ind [F]ile" })
+vim.keymap.set("n", "frf", disable_if_oil_buffer(telescope_builtin.oldfiles), { desc = "[F]ind [R]ecent [F]ile" })
+vim.keymap.set("n", "fnf", disable_if_oil_buffer(custom_finds.find_neovim_config_files), { desc = "[F]ind [N]eovim configuration [F]ile" })
+vim.keymap.set("n", "fc", disable_if_oil_buffer(custom_finds.find_code), { desc = "[F]ind [C]ode"})
+vim.keymap.set("n", "fd", disable_if_oil_buffer(custom_finds.find_definitions), { desc = "[F]ind [D]efinitions" })
+vim.keymap.set("n", "fr", disable_if_oil_buffer(custom_finds.find_references), { desc = "[F]ind [R]eferences" })
+vim.keymap.set("n", "fh", disable_if_oil_buffer(telescope_builtin.help_tags), { desc = "[F]ind [H]elp" })
+vim.keymap.set("n", "fk", disable_if_oil_buffer(telescope_builtin.keymaps), { desc = "[F]ind [K]eymap" })
 
 -- Terminal
 local terminal = require("config.terminal")
@@ -129,21 +143,22 @@ vim.keymap.set("v", "<Tab>", ">gv")
 vim.keymap.set("v", "<S-Tab>", "<gv")
 
 -- Diagnostics
-local display_diagnostics = false
+local display_diagnostics = true
 local toggle_diagnostics = function()
   display_diagnostics = not display_diagnostics
   vim.diagnostic.config({ virtual_lines = display_diagnostics })
 end
+toggle_diagnostics() -- disable by default, more robust this way
 
-vim.keymap.set('n', 'ds', toggle_diagnostics, { desc = "[D]iagnostic [S]how" })
-vim.keymap.set('n', 'dl', function() telescope_builtin.diagnostics({ bufnr = 0 }) end, { desc = "[D]iagnostics [L]ist" })
-vim.keymap.set('n', 'df', vim.lsp.buf.code_action, { desc = '[D]iagnostic [F]ix'})
+vim.keymap.set('n', 'ds', disable_if_oil_buffer(toggle_diagnostics), { desc = "[D]iagnostic [S]how" })
+vim.keymap.set('n', 'dl', disable_if_oil_buffer(function() telescope_builtin.diagnostics({ bufnr = 0 }) end), { desc = "[D]iagnostics [L]ist" })
+vim.keymap.set('n', 'df', disable_if_oil_buffer(vim.lsp.buf.code_action), { desc = '[D]iagnostic [F]ix'})
 
 -- Git
 local gitsigns = require('gitsigns')
-vim.keymap.set("n", "gd", gitsigns.preview_hunk_inline, { desc = "[G]it [D]iff" })
-vim.keymap.set("n", "ga", gitsigns.stage_hunk, { desc = "[G]it [A]dd" })
-vim.keymap.set("n", "gr", gitsigns.reset_hunk, { desc = "[G]it [R]eset" })
+vim.keymap.set("n", "gd", disable_if_oil_buffer(gitsigns.preview_hunk_inline), { desc = "[G]it [D]iff" })
+vim.keymap.set("n", "ga", disable_if_oil_buffer(gitsigns.stage_hunk), { desc = "[G]it [A]dd" })
+vim.keymap.set("n", "gr", disable_if_oil_buffer(gitsigns.reset_hunk), { desc = "[G]it [R]eset" })
 
 local strip_diffs = function()
   local start_line = vim.api.nvim_buf_get_mark(0, "[")[1]

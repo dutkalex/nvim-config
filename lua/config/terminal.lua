@@ -20,7 +20,7 @@ local function create_floating_window(opts)
     row = row,
     style = "minimal",
     border = "rounded",
-    title = opts.title,
+    title = " "..opts.title.." ",
     title_pos = "center",
   }
 

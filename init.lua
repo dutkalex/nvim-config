@@ -115,9 +115,9 @@ local disable_if_oil_buffer = function(fn)
   end
 end
 
-vim.keymap.set("n", "ff", disable_if_oil_buffer(custom_finds.find_files), { desc = "[F]ind [F]ile" })
-vim.keymap.set("n", "frf", disable_if_oil_buffer(telescope_builtin.oldfiles), { desc = "[F]ind [R]ecent [F]ile" })
-vim.keymap.set("n", "fnf", disable_if_oil_buffer(custom_finds.find_neovim_config_files), { desc = "[F]ind [N]eovim configuration [F]ile" })
+vim.keymap.set("n", "ff", custom_finds.find_files, { desc = "[F]ind [F]ile" })
+vim.keymap.set("n", "frf", telescope_builtin.oldfiles, { desc = "[F]ind [R]ecent [F]ile" })
+vim.keymap.set("n", "fnf", custom_finds.find_neovim_config_files, { desc = "[F]ind [N]eovim configuration [F]ile" })
 vim.keymap.set("n", "fc", disable_if_oil_buffer(custom_finds.find_code), { desc = "[F]ind [C]ode"})
 vim.keymap.set("n", "fd", disable_if_oil_buffer(custom_finds.find_definitions), { desc = "[F]ind [D]efinitions" })
 vim.keymap.set("n", "fr", disable_if_oil_buffer(custom_finds.find_references), { desc = "[F]ind [R]eferences" })
@@ -145,10 +145,13 @@ vim.keymap.set("i", "<S-Down>",  "<Esc>v<Down>",  { silent = true })
 vim.keymap.set("i", "<S-Left>",  "<Esc>v<Left>",  { silent = true })
 vim.keymap.set("i", "<S-Right>", "<Esc>v<Right>", { silent = true })
 
--- Alt line moves
-vim.keymap.set("n", "<A-Up>", ":m .-2<CR>==")
-vim.keymap.set("n", "<A-Down>", ":m .+1<CR>==")
+-- Fast navigation with Alt+Arrows
+vim.keymap.set("n", "<A-Up>", "{")
+vim.keymap.set("n", "<A-Down>", "}")
+vim.keymap.set("n", "<A-Left>", "^")
+vim.keymap.set("n", "<A-Right>", "$")
 
+-- Alt line moves
 vim.keymap.set("v", "<A-Up>", ":m '<-2<CR>gv=gv")
 vim.keymap.set("v", "<A-Down>", ":m '>+1<CR>gv=gv")
 
@@ -164,12 +167,24 @@ local toggle_diagnostics = function()
 end
 toggle_diagnostics() -- disable by default, more robust this way
 
+local jump_next_diagnostic = function()
+  vim.diagnostic.jump({ count = 1, wrap = false })
+end
+
+local jump_prev_diagnostic = function()
+  vim.diagnostic.jump({ count = -1, wrap = false })
+end
+
+vim.keymap.set('n', 'dn', disable_if_oil_buffer(jump_next_diagnostic), { desc = "[D]iagnostic [N]ext" })
+vim.keymap.set('n', 'dp', disable_if_oil_buffer(jump_prev_diagnostic), { desc = "[D]iagnostic [P]revious" })
 vim.keymap.set('n', 'ds', disable_if_oil_buffer(toggle_diagnostics), { desc = "[D]iagnostic [S]how" })
 vim.keymap.set('n', 'dl', disable_if_oil_buffer(function() telescope_builtin.diagnostics({ bufnr = 0 }) end), { desc = "[D]iagnostics [L]ist" })
 vim.keymap.set('n', 'df', disable_if_oil_buffer(vim.lsp.buf.code_action), { desc = '[D]iagnostic [F]ix'})
 
 -- Git
 local gitsigns = require('gitsigns')
+vim.keymap.set("n", "gn", disable_if_oil_buffer(gitsigns.next_hunk), { desc = "[G]it [N]ext"})
+vim.keymap.set("n", "gp", disable_if_oil_buffer(gitsigns.prev_hunk), { desc = "[G]it [P]revious"})
 vim.keymap.set("n", "gd", disable_if_oil_buffer(gitsigns.preview_hunk_inline), { desc = "[G]it [D]iff" })
 vim.keymap.set("n", "ga", disable_if_oil_buffer(gitsigns.stage_hunk), { desc = "[G]it [A]dd" })
 vim.keymap.set("n", "gr", disable_if_oil_buffer(gitsigns.reset_hunk), { desc = "[G]it [R]eset" })

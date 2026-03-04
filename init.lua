@@ -148,12 +148,20 @@ vim.keymap.set("i", "<S-Right>", "<Esc>v<Right>", { silent = true })
 -- Fast navigation with Alt+Arrows
 vim.keymap.set("n", "<A-Up>", "{")
 vim.keymap.set("n", "<A-Down>", "}")
-vim.keymap.set("n", "<A-Left>", "^")
-vim.keymap.set("n", "<A-Right>", "$")
+vim.keymap.set("n", "<A-Left>", "b")
+vim.keymap.set("n", "<A-Right>", "w")
+
+vim.keymap.set("n", "<C-A-Up>", "gg")
+vim.keymap.set("n", "<C-A-Down>", "G")
+vim.keymap.set("n", "<C-A-Left>", "^")
+vim.keymap.set("n", "<C-A-Right>", "$")
 
 -- Alt line moves
 vim.keymap.set("v", "<A-Up>", ":m '<-2<CR>gv=gv")
 vim.keymap.set("v", "<A-Down>", ":m '>+1<CR>gv=gv")
+
+vim.keymap.set("n", "<S-A-Up>", ":m-2<CR>")
+vim.keymap.set("n", "<S-A-Down>", ":m+1<CR>")
 
 -- Tab indents
 vim.keymap.set("v", "<Tab>", ">gv")

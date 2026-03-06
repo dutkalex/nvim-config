@@ -1,8 +1,6 @@
 # Would be nice to have
 
-- Top-right corner list with unsaved buffers
+- Better buffers navigation and management (`fb` is not enough)
+- Add formating (conform.nvim seems promising)
 - Command to reload `~/.config/nvim/init.lua`
-- Open go to def in new tab
-- Open help in new tab
 - Extend `fk` keymap to also display builtins + filter by mode
-

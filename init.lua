@@ -117,6 +117,7 @@ end
 
 vim.keymap.set("n", "ff", custom_finds.find_files, { desc = "[F]ind [F]ile" })
 vim.keymap.set("n", "frf", telescope_builtin.oldfiles, { desc = "[F]ind [R]ecent [F]ile" })
+vim.keymap.set("n", "fb", telescope_builtin.buffers, { desc = "[F]ind [B]uffer" })
 vim.keymap.set("n", "fnf", custom_finds.find_neovim_config_files, { desc = "[F]ind [N]eovim configuration [F]ile" })
 vim.keymap.set("n", "fc", disable_if_oil_buffer(custom_finds.find_code), { desc = "[F]ind [C]ode"})
 vim.keymap.set("n", "fd", disable_if_oil_buffer(custom_finds.find_definitions), { desc = "[F]ind [D]efinitions" })

@@ -4,25 +4,46 @@ local finders = require("telescope.finders")
 local sorters = require("telescope.sorters")
 local make_entry = require("telescope.make_entry")
 local conf = require("telescope.config").values
+local actions = require('telescope.actions')
+local action_state = require('telescope.actions.state')
 
 local utils = require("config.utils")
+
+local open_in_new_tab = function(_, map)
+  local fn = function(prompt_bufnr)
+    local selection = action_state.get_selected_entry()
+    actions.close(prompt_bufnr)
+    vim.cmd("tabnew " .. selection.filename)
+    if selection.lnum and selection.col then
+      vim.api.nvim_win_set_cursor(0, {selection.lnum, selection.col})
+    end
+  end
+
+  map('i', '<C-CR>', fn)
+  map('n', '<C-CR>', fn)
+  return true
+end
+
 
 local find_files = function(opts)
   opts = opts or {}
   opts.cwd = opts.cwd or utils.find_git_root()
   opts.find_command = { "rg", "--files", "--hidden", "--glob", "!.git/*" }
+  opts.attach_mappings = open_in_new_tab
   telescope_builtin.find_files(opts)
 end
 
 local find_neovim_config_files = function(opts)
   opts = opts or {}
   opts.cwd = opts.cwd or vim.fn.stdpath("config")
+  -- opts.attach_mappings = open_in_new_tab
   telescope_builtin.find_files(opts)
 end
 
 local find_code = function(opts)
   opts = opts or {}
   opts.cwd = opts.cwd or utils.find_git_root()
+  opts.attach_mappings = open_in_new_tab
 
   local finder = finders.new_async_job {
     command_generator = function(prompt)
@@ -64,12 +85,14 @@ end
 local find_definitions = function(opts)
   opts = opts or {}
   opts.jump_type = "never"
+  opts.attach_mappings = open_in_new_tab
   telescope_builtin.lsp_definitions(opts)
 end
 
 local find_references = function(opts)
   opts = opts or {}
   opts.jump_type = "never"
+  opts.attach_mappings = open_in_new_tab
   telescope_builtin.lsp_references(opts)
 end
 

@@ -221,6 +221,8 @@ end
 
 vim.api.nvim_create_autocmd("BufWritePre", { pattern = "*", callback = strip_diffs })
 
+vim.api.nvim_create_autocmd("TextYankPost", { callback = function() vim.highlight.on_yank({ higroup = 'Search' }) end })
+
 highlight_trailing_whitespaces = function()
   vim.cmd([[highlight ExtraWhitespace ctermbg=red guibg=red]])
   vim.cmd([[match ExtraWhitespace /\s\+$/]])

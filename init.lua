@@ -2,15 +2,16 @@ require("config.lazy")
 
 -- Treesitter setup
 require('nvim-treesitter').install({
-  "lua",
-  "python",
+  "bash",
   "c",
   "cpp",
   "cmake",
+  "doxygen",
+  "lua",
   "markdown",
-  "yaml",
+  "python",
   "toml",
-  "bash",
+  "yaml",
 })
 
 -- LSP setup

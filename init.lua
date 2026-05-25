@@ -44,6 +44,14 @@ vim.lsp.config.clangd = {
 }
 vim.lsp.enable({'clangd'})
 
+vim.lsp.config.ruff = {
+  cmd = { 'ruff', 'server' },
+  filetypes = { 'python' },
+  root_markers = { 'pyproject.toml', 'ruff.toml', '.ruff.toml', '.git' },
+  settings = {},
+}
+vim.lsp.enable({'ruff'})
+
 vim.diagnostic.config({
   virtual_lines = { current_line = true },
 })

@@ -134,6 +134,20 @@ vim.keymap.set("n", "fr", disable_if_oil_buffer(custom_finds.find_references), {
 vim.keymap.set("n", "fh", disable_if_oil_buffer(telescope_builtin.help_tags), { desc = "[F]ind [H]elp" })
 vim.keymap.set("n", "fk", disable_if_oil_buffer(telescope_builtin.keymaps), { desc = "[F]ind [K]eymap" })
 
+vim.keymap.set("n", "er", disable_if_oil_buffer(vim.lsp.buf.rename), { desc = "[E]dit [R]ename" })
+vim.keymap.set("n", "ef", disable_if_oil_buffer(vim.lsp.buf.format), { desc = "[E]dit [F]ormat" })
+vim.keymap.set("v", "ef", function()
+  local start_pos = vim.api.nvim_buf_get_mark(0, "<")
+  local end_pos = vim.api.nvim_buf_get_mark(0, ">")
+
+  vim.lsp.buf.format({
+    range = {
+      ["start"] = { start_pos[1] - 1, start_pos[2] },
+      ["end"] = { end_pos[1] - 1, end_pos[2] },
+    },
+  })
+end, { desc = "[E]dit [F]ormat" })
+
 -- Terminal
 local terminal = require("config.terminal")
 vim.keymap.set("n", "mt", terminal.create_mini_terminal, { desc = "Open a new [M]ini [T]erminal" })

@@ -147,8 +147,8 @@ vim.keymap.set("i", "<S-Left>",  "<Esc>v<Left>",  { silent = true })
 vim.keymap.set("i", "<S-Right>", "<Esc>v<Right>", { silent = true })
 
 -- Fast navigation with Alt+Arrows
-vim.keymap.set("n", "<A-Up>", "{")
-vim.keymap.set("n", "<A-Down>", "}")
+vim.keymap.set("n", "<A-Up>", ":-10<CR>")
+vim.keymap.set("n", "<A-Down>", ":+10<CR>")
 vim.keymap.set("n", "<A-Left>", "b")
 vim.keymap.set("n", "<A-Right>", "w")
 

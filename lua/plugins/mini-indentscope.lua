@@ -1,5 +1,7 @@
 return {
   "nvim-mini/mini.indentscope",
-  -- event = "LazyFile",
-  -- opts = {},
+  config = {
+    symbol = '|',
+    animation = function(s, n) return 1 end,
+  }
 }

@@ -1,6 +1,7 @@
 require("config.options")
 require("config.keymaps")
 require("config.lsp")
+require("config.diagnostics")
 require("config.lazy")
 
 -- Treesitter setup
@@ -17,9 +18,6 @@ require('nvim-treesitter').install({
   "yaml",
 })
 
-vim.diagnostic.config({
-  virtual_lines = { current_line = true },
-})
 
 -- Colorscheme
 vim.cmd.colorscheme("tokyonight")

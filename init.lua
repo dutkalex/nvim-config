@@ -75,7 +75,8 @@ vim.keymap.set("n", "<leader>fk", disable_if_oil_buffer(telescope_builtin.keymap
 
 vim.keymap.set("n", "<leader>er", disable_if_oil_buffer(vim.lsp.buf.rename), { desc = "[E]dit [R]ename" })
 vim.keymap.set("n", "<leader>ef", disable_if_oil_buffer(vim.lsp.buf.format), { desc = "[E]dit [F]ormat" })
-vim.keymap.set("v", "<leader>ef", function()
+
+local format_selection = function()
   local start_pos = vim.api.nvim_buf_get_mark(0, "<")
   local end_pos = vim.api.nvim_buf_get_mark(0, ">")
 
@@ -85,7 +86,9 @@ vim.keymap.set("v", "<leader>ef", function()
       ["end"] = { end_pos[1] - 1, end_pos[2] },
     },
   })
-end, { desc = "[E]dit [F]ormat" })
+end
+
+vim.keymap.set("v", "<leader>ef", disable_if_oil_buffer(format_selection), { desc = "[E]dit [F]ormat" })
 
 -- Terminal
 local terminal = require("config.terminal")

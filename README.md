@@ -1,12 +1,11 @@
-# Would be nice to have
+My personal Neovim setup, nothing particularly interesting here.
+
+# Todos / ideas
 
 - Better buffers navigation and management (`fb` is not enough)
-- Add formating (conform.nvim seems promising)
-- Add keymaps to trigger formatting (`vim.lsp.buf.format()`)
-- Add a command to reload `~/.config/nvim/init.lua`
 - Extend `fk` keymap to also display builtins + filter by mode
 - Use mini.pairs (https://github.com/nvim-mini/mini.nvim/blob/main/readmes/mini-pairs.md)
-- Highlight nested scopes
+- Highlight nested scopes (fork indentscope?)
 - Use the telescope preview highlights
-- Highlight doxygen keywords
-- Have gitsigns and lsp markers on different columns
+- Highlight doxygen keywords (maybe there is already a treesitter parser for this?)
+- Have gitsigns and lsp markers on different columns?

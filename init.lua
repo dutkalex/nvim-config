@@ -3,7 +3,7 @@ require("config.keymaps")
 require("config.autocmds")
 require("config.lsp")
 require("config.diagnostics")
-require("config.lazy")
+require("config.lazy") -- Loads lua/plugins/*.lua files
 
 -- Treesitter setup
 require('nvim-treesitter').install({
@@ -22,22 +22,6 @@ require('nvim-treesitter').install({
 
 vim.cmd.colorscheme("tokyonight")
 vim.api.nvim_set_hl(0, "MiniIndentscopeSymbol", { link = "Comment" }) -- Color indentation line like comments
-
--- Status bar
-require('lualine').setup({
-  sections = {
-    lualine_c = { -- Show full absolute paths
-      {
-        'filename', path = 2, shorting_target = 40,
-        cond = function() return vim.bo.filetype ~= "oil" end
-      },
-      {
-        function() return vim.fn.fnamemodify(require("oil").get_current_dir(), ":p") end,
-        cond = function() return vim.bo.filetype == "oil" end,
-      }
-    }
-  }
-})
 
 -- Oil file navigation
 vim.keymap.set("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })

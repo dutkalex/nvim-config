@@ -2,6 +2,7 @@ My personal Neovim setup, nothing particularly interesting here.
 
 # Todos / ideas
 
+- Add a project-wide TODO/FIXME summary
 - Better buffers navigation and management (`fb` is not enough)
 - Extend `fk` keymap to also display builtins + filter by mode
 - Use mini.pairs (https://github.com/nvim-mini/mini.nvim/blob/main/readmes/mini-pairs.md)

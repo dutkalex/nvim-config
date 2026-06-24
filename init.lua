@@ -3,7 +3,7 @@ require("config.keymaps")
 require("config.autocmds")
 require("config.lsp")
 require("config.diagnostics")
-require("config.lazy")
+require("config.lazy")  
 
 -- Treesitter setup
 require('nvim-treesitter').install({

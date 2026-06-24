@@ -15,6 +15,7 @@ require('nvim-treesitter').install({
   "lua",
   "markdown",
   "python",
+  "rust",
   "toml",
   "yaml",
 })

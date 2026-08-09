@@ -37,4 +37,3 @@ vim.keymap.set("n", "<S-A-Down>", ":m+1<CR>")
 -- Tab indents
 vim.keymap.set("v", "<Tab>", ">gv")
 vim.keymap.set("v", "<S-Tab>", "<gv")
-

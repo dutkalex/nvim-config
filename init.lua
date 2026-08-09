@@ -2,7 +2,6 @@ require("config.options")
 require("config.keymaps")
 require("config.autocmds")
 require("config.lsp")
-require("config.diagnostics")
 require("config.lazy") -- Loads lua/plugins/*.lua files
 
 -- Treesitter setup
@@ -18,6 +17,10 @@ require('nvim-treesitter').install({
   "rust",
   "toml",
   "yaml",
+  "astro",
+  "css",
+  "javascript",
+  "typescript"
 })
 
 
@@ -26,6 +29,7 @@ vim.api.nvim_set_hl(0, "MiniIndentscopeSymbol", { link = "Comment" }) -- Color i
 
 -- Oil file navigation
 vim.keymap.set("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
+vim.keymap.set("n", "<leader>lz", "<cmd>Lazy<cr>", { desc = "Lazy" })
 
 -- Find commands
 local telescope_builtin = require('telescope.builtin')
@@ -73,14 +77,6 @@ vim.keymap.set("n", "<leader>mt", terminal.create_mini_terminal, { desc = "Open 
 vim.keymap.set("t", "<esc><esc>", "<c-\\><c-n>:q<CR>") -- double escape to close the mini terminal
 
 
--- Diagnostics
-local display_diagnostics = true
-local toggle_diagnostics = function()
-  display_diagnostics = not display_diagnostics
-  vim.diagnostic.config({ virtual_lines = display_diagnostics })
-end
-toggle_diagnostics() -- disable by default, more robust this way
-
 local jump_next_diagnostic = function()
   vim.diagnostic.jump({ count = 1, wrap = false })
 end
@@ -89,10 +85,56 @@ local jump_prev_diagnostic = function()
   vim.diagnostic.jump({ count = -1, wrap = false })
 end
 
+local diagnostic_threshold = vim.diagnostic.severity.HINT
+
+local function config_diagnostics(new_threshold)
+  diagnostic_threshold = new_threshold
+
+  vim.diagnostic.config({
+    severity_sort = true,
+    signs = { severity = { min = new_threshold } },
+    virtual_text = { severity = { min = new_threshold } },
+    underline = { severity = { min = vim.diagnostic.severity.HINT } },
+  })
+end
+
+config_diagnostics(diagnostic_threshold)
+
+local function more_diagnostics()
+  if diagnostic_threshold == vim.diagnostic.severity.ERROR then
+    config_diagnostics(vim.diagnostic.severity.WARN)
+    vim.notify("Showing ERROR + WARN diagnostics")
+  elseif diagnostic_threshold == vim.diagnostic.severity.WARN then
+    config_diagnostics(vim.diagnostic.severity.INFO)
+    vim.notify("Showing ERROR + WARN + INFO diagnostics")
+  elseif diagnostic_threshold == vim.diagnostic.severity.INFO then
+    config_diagnostics(vim.diagnostic.severity.HINT)
+    vim.notify("Showing ERROR + WARN + INFO + HINT diagnostics")
+  else
+    vim.notify("Already showing all diagnostics (ERROR + WARN + INFO + HINT)")
+  end
+end
+
+local function less_diagnostics()
+  if diagnostic_threshold == vim.diagnostic.severity.HINT then
+    config_diagnostics(vim.diagnostic.severity.INFO)
+    vim.notify("Showing ERROR + WARN + INFO diagnostics")
+  elseif diagnostic_threshold == vim.diagnostic.severity.INFO then
+    config_diagnostics(vim.diagnostic.severity.WARN)
+    vim.notify("Showing ERROR + WARN diagnostics")
+  elseif diagnostic_threshold == vim.diagnostic.severity.WARN then
+    config_diagnostics(vim.diagnostic.severity.ERROR)
+    vim.notify("Showing ERROR diagnostics")
+  else
+    vim.notify("Already showing minimal diagnostics (ERROR only)")
+  end
+end
+
+vim.keymap.set('n', '<leader>dd', disable_if_oil_buffer(function() telescope_builtin.diagnostics({ bufnr = 0 }) end), { desc = "List [D]ocument [D]iagnostics" })
 vim.keymap.set('n', '<leader>dn', disable_if_oil_buffer(jump_next_diagnostic), { desc = "[D]iagnostic [N]ext" })
 vim.keymap.set('n', '<leader>dp', disable_if_oil_buffer(jump_prev_diagnostic), { desc = "[D]iagnostic [P]revious" })
-vim.keymap.set('n', '<leader>ds', disable_if_oil_buffer(toggle_diagnostics), { desc = "[D]iagnostic [S]how" })
-vim.keymap.set('n', '<leader>dl', disable_if_oil_buffer(function() telescope_builtin.diagnostics({ bufnr = 0 }) end), { desc = "[D]iagnostics [L]ist" })
+vim.keymap.set("n", "<leader>dl", disable_if_oil_buffer(less_diagnostics), { desc = "[D]iagnostics show [L]ess" })
+vim.keymap.set("n", "<leader>dm", disable_if_oil_buffer(more_diagnostics), { desc = "[D]iagnostics show [M]ore" })
 vim.keymap.set('n', '<leader>df', disable_if_oil_buffer(vim.lsp.buf.code_action), { desc = '[D]iagnostic [F]ix'})
 
 -- Git

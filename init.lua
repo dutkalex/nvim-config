@@ -77,6 +77,7 @@ vim.keymap.set("n", "<leader>mt", terminal.create_mini_terminal, { desc = "Open 
 vim.keymap.set("t", "<esc><esc>", "<c-\\><c-n>:q<CR>") -- double escape to close the mini terminal
 
 
+-- Diagnostics
 local jump_next_diagnostic = function()
   vim.diagnostic.jump({ count = 1, wrap = false })
 end
@@ -103,30 +104,30 @@ config_diagnostics(diagnostic_threshold)
 local function more_diagnostics()
   if diagnostic_threshold == vim.diagnostic.severity.ERROR then
     config_diagnostics(vim.diagnostic.severity.WARN)
-    vim.notify("Showing ERROR + WARN diagnostics")
+    vim.notify("Showing ERROR + WARN diagnostics", vim.log.levels.INFO)
   elseif diagnostic_threshold == vim.diagnostic.severity.WARN then
     config_diagnostics(vim.diagnostic.severity.INFO)
-    vim.notify("Showing ERROR + WARN + INFO diagnostics")
+    vim.notify("Showing ERROR + WARN + INFO diagnostics", vim.log.levels.INFO)
   elseif diagnostic_threshold == vim.diagnostic.severity.INFO then
     config_diagnostics(vim.diagnostic.severity.HINT)
-    vim.notify("Showing ERROR + WARN + INFO + HINT diagnostics")
+    vim.notify("Showing ERROR + WARN + INFO + HINT diagnostics", vim.log.levels.INFO)
   else
-    vim.notify("Already showing all diagnostics (ERROR + WARN + INFO + HINT)")
+    vim.notify("Already showing all diagnostics (ERROR + WARN + INFO + HINT)", vim.log.levels.WARN)
   end
 end
 
 local function less_diagnostics()
   if diagnostic_threshold == vim.diagnostic.severity.HINT then
     config_diagnostics(vim.diagnostic.severity.INFO)
-    vim.notify("Showing ERROR + WARN + INFO diagnostics")
+    vim.notify("Showing ERROR + WARN + INFO diagnostics", vim.log.levels.INFO)
   elseif diagnostic_threshold == vim.diagnostic.severity.INFO then
     config_diagnostics(vim.diagnostic.severity.WARN)
-    vim.notify("Showing ERROR + WARN diagnostics")
+    vim.notify("Showing ERROR + WARN diagnostics", vim.log.levels.INFO)
   elseif diagnostic_threshold == vim.diagnostic.severity.WARN then
     config_diagnostics(vim.diagnostic.severity.ERROR)
-    vim.notify("Showing ERROR diagnostics")
+    vim.notify("Showing ERROR diagnostics", vim.log.levels.INFO)
   else
-    vim.notify("Already showing minimal diagnostics (ERROR only)")
+    vim.notify("Already showing minimal diagnostics (ERROR only)", vim.log.levels.WARN)
   end
 end
 

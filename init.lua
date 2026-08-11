@@ -78,76 +78,14 @@ vim.keymap.set("t", "<esc><esc>", "<c-\\><c-n>:q<CR>") -- double escape to close
 
 
 -- Diagnostics
-local jump_next_diagnostic = function()
-  vim.diagnostic.jump({ count = 1, wrap = false })
-end
-
-local jump_prev_diagnostic = function()
-  vim.diagnostic.jump({ count = -1, wrap = false })
-end
-
-local diagnostic_threshold = vim.diagnostic.severity.HINT
-
-local function config_diagnostics(new_threshold)
-  diagnostic_threshold = new_threshold
-
-  vim.diagnostic.config({
-    severity_sort = true,
-    signs = { severity = { min = new_threshold } },
-    virtual_text = { severity = { min = new_threshold } },
-    underline = { severity = { min = vim.diagnostic.severity.HINT } },
-  })
-end
-
-config_diagnostics(diagnostic_threshold)
-
-local function more_diagnostics()
-  if diagnostic_threshold == vim.diagnostic.severity.ERROR then
-    config_diagnostics(vim.diagnostic.severity.WARN)
-    vim.notify("Showing ERROR + WARN diagnostics", vim.log.levels.INFO)
-  elseif diagnostic_threshold == vim.diagnostic.severity.WARN then
-    config_diagnostics(vim.diagnostic.severity.INFO)
-    vim.notify("Showing ERROR + WARN + INFO diagnostics", vim.log.levels.INFO)
-  elseif diagnostic_threshold == vim.diagnostic.severity.INFO then
-    config_diagnostics(vim.diagnostic.severity.HINT)
-    vim.notify("Showing ERROR + WARN + INFO + HINT diagnostics", vim.log.levels.INFO)
-  else
-    vim.notify("Already showing all diagnostics (ERROR + WARN + INFO + HINT)", vim.log.levels.WARN)
-  end
-end
-
-local function less_diagnostics()
-  if diagnostic_threshold == vim.diagnostic.severity.HINT then
-    config_diagnostics(vim.diagnostic.severity.INFO)
-    vim.notify("Showing ERROR + WARN + INFO diagnostics", vim.log.levels.INFO)
-  elseif diagnostic_threshold == vim.diagnostic.severity.INFO then
-    config_diagnostics(vim.diagnostic.severity.WARN)
-    vim.notify("Showing ERROR + WARN diagnostics", vim.log.levels.INFO)
-  elseif diagnostic_threshold == vim.diagnostic.severity.WARN then
-    config_diagnostics(vim.diagnostic.severity.ERROR)
-    vim.notify("Showing ERROR diagnostics", vim.log.levels.INFO)
-  else
-    vim.notify("Already showing minimal diagnostics (ERROR only)", vim.log.levels.WARN)
-  end
-end
-
-local show_diagnostic = function()
-  vim.diagnostic.open_float({
-    scope = "cursor",
-    source = "if_many",
-    border = "rounded",
-  })
-
-  vim.lsp.buf.code_action()
-end
-
+local diag = require("config.diagnostics")
 vim.keymap.set('n', '<leader>dd', disable_if_oil_buffer(function() telescope_builtin.diagnostics({ bufnr = 0 }) end),
   { desc = "List [D]ocument [D]iagnostics" })
-vim.keymap.set('n', '<leader>dn', disable_if_oil_buffer(jump_next_diagnostic), { desc = "[D]iagnostic [N]ext" })
-vim.keymap.set('n', '<leader>dp', disable_if_oil_buffer(jump_prev_diagnostic), { desc = "[D]iagnostic [P]revious" })
-vim.keymap.set("n", "<leader>dl", disable_if_oil_buffer(less_diagnostics), { desc = "[D]iagnostics show [L]ess" })
-vim.keymap.set("n", "<leader>dm", disable_if_oil_buffer(more_diagnostics), { desc = "[D]iagnostics show [M]ore" })
-vim.keymap.set("n", "<leader>ds", disable_if_oil_buffer(show_diagnostic), { desc = "[D]iagnostic [S]how" })
+vim.keymap.set('n', '<leader>dn', disable_if_oil_buffer(diag.next), { desc = "[D]iagnostic [N]ext" })
+vim.keymap.set('n', '<leader>dp', disable_if_oil_buffer(diag.prev), { desc = "[D]iagnostic [P]revious" })
+vim.keymap.set("n", "<leader>dl", disable_if_oil_buffer(diag.less), { desc = "[D]iagnostics show [L]ess" })
+vim.keymap.set("n", "<leader>dm", disable_if_oil_buffer(diag.more), { desc = "[D]iagnostics show [M]ore" })
+vim.keymap.set("n", "<leader>ds", disable_if_oil_buffer(diag.show), { desc = "[D]iagnostic [S]how" })
 
 -- Git
 local gitsigns = require('gitsigns')

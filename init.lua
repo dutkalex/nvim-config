@@ -48,7 +48,7 @@ vim.keymap.set("n", "<leader>ff", custom_finds.find_files, { desc = "[F]ind [F]i
 vim.keymap.set("n", "<leader>frf", telescope_builtin.oldfiles, { desc = "[F]ind [R]ecent [F]ile" })
 vim.keymap.set("n", "<leader>fb", telescope_builtin.buffers, { desc = "[F]ind [B]uffer" })
 vim.keymap.set("n", "<leader>fnf", custom_finds.find_neovim_config_files, { desc = "[F]ind [N]eovim configuration [F]ile" })
-vim.keymap.set("n", "<leader>fc", disable_if_oil_buffer(custom_finds.find_code), { desc = "[F]ind [C]ode"})
+vim.keymap.set("n", "<leader>fc", disable_if_oil_buffer(custom_finds.find_code), { desc = "[F]ind [C]ode" })
 vim.keymap.set("n", "<leader>fd", disable_if_oil_buffer(custom_finds.find_definitions), { desc = "[F]ind [D]efinitions" })
 vim.keymap.set("n", "<leader>fr", disable_if_oil_buffer(custom_finds.find_references), { desc = "[F]ind [R]eferences" })
 vim.keymap.set("n", "<leader>fh", disable_if_oil_buffer(telescope_builtin.help_tags), { desc = "[F]ind [H]elp" })
@@ -131,17 +131,28 @@ local function less_diagnostics()
   end
 end
 
-vim.keymap.set('n', '<leader>dd', disable_if_oil_buffer(function() telescope_builtin.diagnostics({ bufnr = 0 }) end), { desc = "List [D]ocument [D]iagnostics" })
+local show_diagnostic = function()
+  vim.diagnostic.open_float({
+    scope = "cursor",
+    source = "if_many",
+    border = "rounded",
+  })
+
+  vim.lsp.buf.code_action()
+end
+
+vim.keymap.set('n', '<leader>dd', disable_if_oil_buffer(function() telescope_builtin.diagnostics({ bufnr = 0 }) end),
+  { desc = "List [D]ocument [D]iagnostics" })
 vim.keymap.set('n', '<leader>dn', disable_if_oil_buffer(jump_next_diagnostic), { desc = "[D]iagnostic [N]ext" })
 vim.keymap.set('n', '<leader>dp', disable_if_oil_buffer(jump_prev_diagnostic), { desc = "[D]iagnostic [P]revious" })
 vim.keymap.set("n", "<leader>dl", disable_if_oil_buffer(less_diagnostics), { desc = "[D]iagnostics show [L]ess" })
 vim.keymap.set("n", "<leader>dm", disable_if_oil_buffer(more_diagnostics), { desc = "[D]iagnostics show [M]ore" })
-vim.keymap.set('n', '<leader>df', disable_if_oil_buffer(vim.lsp.buf.code_action), { desc = '[D]iagnostic [F]ix'})
+vim.keymap.set("n", "<leader>ds", disable_if_oil_buffer(show_diagnostic), { desc = "[D]iagnostic [S]how" })
 
 -- Git
 local gitsigns = require('gitsigns')
-vim.keymap.set("n", "<leader>gn", disable_if_oil_buffer(gitsigns.next_hunk), { desc = "[G]it [N]ext"})
-vim.keymap.set("n", "<leader>gp", disable_if_oil_buffer(gitsigns.prev_hunk), { desc = "[G]it [P]revious"})
+vim.keymap.set("n", "<leader>gn", disable_if_oil_buffer(gitsigns.next_hunk), { desc = "[G]it [N]ext" })
+vim.keymap.set("n", "<leader>gp", disable_if_oil_buffer(gitsigns.prev_hunk), { desc = "[G]it [P]revious" })
 vim.keymap.set("n", "<leader>gd", disable_if_oil_buffer(gitsigns.preview_hunk_inline), { desc = "[G]it [D]iff" })
 vim.keymap.set("n", "<leader>ga", disable_if_oil_buffer(gitsigns.stage_hunk), { desc = "[G]it [A]dd" })
 vim.keymap.set("n", "<leader>gr", disable_if_oil_buffer(gitsigns.reset_hunk), { desc = "[G]it [R]eset" })

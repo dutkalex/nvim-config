@@ -145,3 +145,13 @@ vim.keymap.set("n", "<leader>gp", disable_if_oil_buffer(gitsigns.prev_hunk), { d
 vim.keymap.set("n", "<leader>gd", disable_if_oil_buffer(gitsigns.preview_hunk_inline), { desc = "[G]it [D]iff" })
 vim.keymap.set("n", "<leader>ga", disable_if_oil_buffer(gitsigns.stage_hunk), { desc = "[G]it [A]dd" })
 vim.keymap.set("n", "<leader>gr", disable_if_oil_buffer(gitsigns.reset_hunk), { desc = "[G]it [R]eset" })
+
+
+local close_floating_windows = function()
+  for _, win in ipairs(vim.api.nvim_list_wins()) do
+    if vim.api.nvim_win_get_config(win).relative ~= "" then
+      vim.api.nvim_win_close(win, true)
+    end
+  end
+end
+vim.keymap.set("n", "<Esc>", close_floating_windows, { desc = "Close floating windows" })

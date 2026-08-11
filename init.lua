@@ -50,8 +50,8 @@ vim.keymap.set("n", "<leader>fnf", custom_finds.find_neovim_config_files, { desc
 vim.keymap.set("n", "<leader>fc", if_not_oil(custom_finds.find_code), { desc = "[F]ind [C]ode" })
 vim.keymap.set("n", "<leader>fd", if_not_oil(custom_finds.find_definitions), { desc = "[F]ind [D]efinitions" })
 vim.keymap.set("n", "<leader>fr", if_not_oil(custom_finds.find_references), { desc = "[F]ind [R]eferences" })
-vim.keymap.set("n", "<leader>fh", if_not_oil(telescope_builtin.help_tags), { desc = "[F]ind [H]elp" })
-vim.keymap.set("n", "<leader>fk", if_not_oil(telescope_builtin.keymaps), { desc = "[F]ind [K]eymap" })
+vim.keymap.set("n", "<leader>fh", telescope_builtin.help_tags, { desc = "[F]ind [H]elp" })
+vim.keymap.set("n", "<leader>fk", telescope_builtin.keymaps, { desc = "[F]ind [K]eymap" })
 
 -- Edit commands (leader e)
 vim.keymap.set("n", "<leader>er", if_not_oil(vim.lsp.buf.rename), { desc = "[E]dit [R]ename" })

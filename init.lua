@@ -57,24 +57,6 @@ vim.keymap.set("n", "<leader>fk", telescope_builtin.keymaps, { desc = "[F]ind [K
 vim.keymap.set("n", "<leader>er", if_not_oil(vim.lsp.buf.rename), { desc = "[E]dit [R]ename" })
 vim.keymap.set("n", "<leader>ef", if_not_oil(vim.lsp.buf.format), { desc = "[E]dit [F]ormat" })
 
--- Diagnostics commands (leader d)
-local diag = require("config.diagnostics")
-vim.keymap.set('n', '<leader>dd', if_not_oil(function() telescope_builtin.diagnostics({ bufnr = 0 }) end),
-{ desc = "List [D]ocument [D]iagnostics" })
-vim.keymap.set('n', '<leader>dn', if_not_oil(diag.next), { desc = "[D]iagnostic [N]ext" })
-vim.keymap.set('n', '<leader>dp', if_not_oil(diag.prev), { desc = "[D]iagnostic [P]revious" })
-vim.keymap.set("n", "<leader>dl", if_not_oil(diag.less), { desc = "[D]iagnostics show [L]ess" })
-vim.keymap.set("n", "<leader>dm", if_not_oil(diag.more), { desc = "[D]iagnostics show [M]ore" })
-vim.keymap.set("n", "<leader>ds", if_not_oil(diag.show), { desc = "[D]iagnostic [S]how" })
-
--- Git commands (leader g)
-local gitsigns = require('gitsigns')
-vim.keymap.set("n", "<leader>gn", if_not_oil(gitsigns.next_hunk), { desc = "[G]it [N]ext" })
-vim.keymap.set("n", "<leader>gp", if_not_oil(gitsigns.prev_hunk), { desc = "[G]it [P]revious" })
-vim.keymap.set("n", "<leader>gd", if_not_oil(gitsigns.preview_hunk_inline), { desc = "[G]it [D]iff" })
-vim.keymap.set("n", "<leader>ga", if_not_oil(gitsigns.stage_hunk), { desc = "[G]it [A]dd" })
-vim.keymap.set("n", "<leader>gr", if_not_oil(gitsigns.reset_hunk), { desc = "[G]it [R]eset" })
-
 local format_selection = function()
   local start_pos = vim.api.nvim_buf_get_mark(0, "<")
   local end_pos = vim.api.nvim_buf_get_mark(0, ">")
@@ -88,6 +70,25 @@ local format_selection = function()
 end
 
 vim.keymap.set("v", "<leader>ef", if_not_oil(format_selection), { desc = "[E]dit [F]ormat" })
+
+-- Diagnostics commands (leader d)
+local diag = require("config.diagnostics")
+vim.keymap.set('n', '<leader>dd', if_not_oil(function() telescope_builtin.diagnostics({ bufnr = 0 }) end),
+  { desc = "List [D]ocument [D]iagnostics" })
+vim.keymap.set('n', '<leader>dn', if_not_oil(diag.next), { desc = "[D]iagnostic [N]ext" })
+vim.keymap.set('n', '<leader>dp', if_not_oil(diag.prev), { desc = "[D]iagnostic [P]revious" })
+vim.keymap.set("n", "<leader>dl", if_not_oil(diag.less), { desc = "[D]iagnostics show [L]ess" })
+vim.keymap.set("n", "<leader>dm", if_not_oil(diag.more), { desc = "[D]iagnostics show [M]ore" })
+vim.keymap.set("n", "<leader>ds", if_not_oil(diag.show), { desc = "[D]iagnostic [S]how" })
+
+-- Git commands (leader g)
+local git = require("config.git")
+vim.keymap.set("n", "<leader>gn", if_not_oil(git.next_hunk), { desc = "[G]it [N]ext" })
+vim.keymap.set("n", "<leader>gp", if_not_oil(git.prev_hunk), { desc = "[G]it [P]revious" })
+vim.keymap.set("n", "<leader>gd", if_not_oil(git.preview_hunk_inline), { desc = "[G]it [D]iff" })
+vim.keymap.set("n", "<leader>ga", if_not_oil(git.stage_hunk), { desc = "[G]it [A]dd" })
+vim.keymap.set("n", "<leader>gr", if_not_oil(git.reset_hunk), { desc = "[G]it [R]eset" })
+vim.keymap.set("n", "<leader>gb", if_not_oil(git.toggle_blame), { desc = "[G]it [B]lame" })
 
 -- Terminal
 local terminal = require("config.terminal")

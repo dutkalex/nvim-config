@@ -1,7 +1,5 @@
 local gitsigns = require("gitsigns")
 
-local ns = vim.api.nvim_create_namespace("blame_rail")
-
 local blame_hunks = function(bufnr)
   local file = vim.api.nvim_buf_get_name(bufnr)
   if file == "" then
@@ -78,9 +76,9 @@ local blame_hunks = function(bufnr)
   return hunks
 end
 
-local render = function(bufnr)
-  vim.api.nvim_buf_clear_namespace(bufnr, ns, 0, -1)
+local ns = vim.api.nvim_create_namespace("git_blame")
 
+local show_blame_view = function(bufnr)
   for _, hunk in ipairs(blame_hunks(bufnr)) do
     local function mark(line, text)
       vim.api.nvim_buf_set_extmark(bufnr, ns, line, 0, {
@@ -106,20 +104,20 @@ local render = function(bufnr)
   end
 end
 
-local blame_enabled = true
+local hide_blame_view = function(bufnr)
+  vim.api.nvim_buf_clear_namespace(bufnr, ns, 0, -1)
+end
+
+local blame_enabled = false
 
 local toggle_blame = function()
-  gitsigns.toggle_current_line_blame()
   if blame_enabled then
-    render(vim.api.nvim_get_current_buf())
+    hide_blame_view(vim.api.nvim_get_current_buf())
   else
-    vim.api.nvim_buf_clear_namespace(
-      vim.api.nvim_get_current_buf(),
-      ns,
-      0,
-      -1
-    )
+    show_blame_view(vim.api.nvim_get_current_buf())
   end
+
+  gitsigns.toggle_current_line_blame()
   blame_enabled = not blame_enabled
 end
 

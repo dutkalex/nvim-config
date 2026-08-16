@@ -8,6 +8,7 @@ vim.opt.inccommand = "split"      -- show find-replaces live
 -- vim.opt.ignorecase = true
 vim.opt.splitbelow = true
 vim.opt.splitright = true
+vim.opt.cursorline = true         -- highlight current line
 
 vim.opt.tabstop = 4
 vim.opt.shiftwidth = 4

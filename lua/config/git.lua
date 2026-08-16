@@ -112,10 +112,11 @@ local show_blame_view = function(bufnr)
     local mark = function(line, text)
       vim.api.nvim_buf_set_extmark(bufnr, ns, line, 0, {
         virt_text = {
-          { text, "Comment" },
+          { text, "GitSignsCurrentLineBlame" },
         },
         virt_text_pos = "overlay",
         virt_text_win_col = vim.api.nvim_win_get_width(0) - 40,
+        hl_mode = "combine",
       })
     end
 

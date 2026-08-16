@@ -1,86 +1,115 @@
 local gitsigns = require("gitsigns")
 
-local blame_hunks = function(bufnr)
+-- Returns the lines of the output of git blame --line-porcelain
+local raw_blame_output = function(bufnr)
   local file = vim.api.nvim_buf_get_name(bufnr)
   if file == "" then
-    return {}
+    return nil
   end
 
-  local result = vim.system({
-    "git",
-    "blame",
-    "--line-porcelain",
-    "--",
-    file,
-  }, {
-    text = true,
-    cwd = vim.fs.dirname(file),
-  }):wait()
+  local result = vim.system(
+    { "git", "blame", "--line-porcelain", "--", file },
+    { text = true, cwd = vim.fs.dirname(file) }
+  ):wait()
 
   if result.code ~= 0 then
-    return {}
+    return nil
   end
 
-  local hunks = {}
-  local lines = vim.split(result.stdout, "\n", { plain = true })
+  return vim.split(result.stdout, "\n", { plain = true })
+end
 
-  local i = 1
-  local buffer_line = 0
+-- Starts reading the blame output at line i and returns the hunk info with the offset for the next call
+local next_hunk = function(blame_output_lines, i)
+  local hunk = {
+    commit = nil,
+    author = nil,
+    line_count = nil,
+  }
 
-  while i <= #lines do
-    local sha = lines[i]:match("^([0-9a-f]+) %d+ %d+")
-    if not sha then
-      i = i + 1
-      goto continue
+  -- Read blame info of the first line of code
+  while i <= #blame_output_lines do
+    local line = blame_output_lines[i]
+    i = i + 1
+
+    if line:sub(1, 1) == "\t" then
+      break
+    end
+
+    local sha = line:match("^([0-9a-f]+) %d+ %d+")
+    if sha then
+      hunk.commit = sha
+    end
+
+    local author = line:match("^author (.+)$")
+    if author then
+      hunk.author = author
+    end
+
+    hunk.line_count = 1
+  end
+
+  -- Read next lines until a different commit is found
+  while i <= #blame_output_lines do
+    local line = blame_output_lines[i]
+
+    local sha = line:match("^([0-9a-f]+) %d+ %d+")
+    if sha and sha ~= hunk.commit then
+      break
+    end
+
+    if line:sub(1, 1) == "\t" then
+      hunk.line_count = hunk.line_count + 1
     end
 
     i = i + 1
+  end
 
-    local author
+  return hunk, i
+end
 
-    -- Consume metadata until the source line.
-    while i <= #lines do
-      local line = lines[i]
+local blame_hunks = function(bufnr)
+  local blame_output_lines = raw_blame_output(bufnr)
+  if not blame_output_lines then
+    return nil
+  end
 
-      if line:sub(1, 1) == "\t" then
-        break
-      end
+  local hunks = {}
+  local i = 1
+  local buffer_line = 0
 
-      author = line:match("^author (.+)$") or author
-      i = i + 1
-    end
-
-    -- The line itself.
-    if i <= #lines then
-      i = i + 1
-    end
-
-    local previous = hunks[#hunks]
-
-    if previous and previous.sha == sha then
-      previous.last = buffer_line
-    else
-      table.insert(hunks, {
-        first = buffer_line,
-        last = buffer_line,
-        sha = sha,
-        author = author or sha:sub(1, 8),
-      })
-    end
-
-    buffer_line = buffer_line + 1
-
-    ::continue::
+  while i <= #blame_output_lines do
+    local hunk, new_i = next_hunk(blame_output_lines, i)
+    table.insert(hunks, {
+      first = buffer_line,
+      last = buffer_line + hunk.line_count - 1,
+      sha = hunk.commit,
+      author = hunk.author or hunk.commit:sub(1, 8),
+    })
+    buffer_line = buffer_line + hunk.line_count
+    i = new_i
   end
 
   return hunks
 end
 
 local ns = vim.api.nvim_create_namespace("git_blame")
+local blame_enabled = false
 
 local show_blame_view = function(bufnr)
-  for _, hunk in ipairs(blame_hunks(bufnr)) do
-    local function mark(line, text)
+  if blame_enabled then
+    vim.notify("Blame hunks already activated", vim.log.levels.INFO)
+    return
+  end
+
+  local hunks = blame_hunks(bufnr)
+  if not hunks then
+    vim.notify("Blame hunks reconstruction failed", vim.log.levels.INFO)
+    return
+  end
+
+  for _, hunk in ipairs(hunks) do
+    local mark = function(line, text)
       vim.api.nvim_buf_set_extmark(bufnr, ns, line, 0, {
         virt_text = {
           { text, "Comment" },
@@ -99,16 +128,19 @@ local show_blame_view = function(bufnr)
         mark(line, "│")
       end
 
-      mark(hunk.last, "╰")
+      mark(hunk.last, "╰─ ")
     end
   end
+
+  blame_enabled = true
 end
 
 local hide_blame_view = function(bufnr)
-  vim.api.nvim_buf_clear_namespace(bufnr, ns, 0, -1)
+  if blame_enabled then
+    vim.api.nvim_buf_clear_namespace(bufnr, ns, 0, -1)
+    blame_enabled = false
+  end
 end
-
-local blame_enabled = false
 
 local toggle_blame = function()
   if blame_enabled then
@@ -118,7 +150,6 @@ local toggle_blame = function()
   end
 
   gitsigns.toggle_current_line_blame()
-  blame_enabled = not blame_enabled
 end
 
 return {

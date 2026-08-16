@@ -1,6 +1,8 @@
 local show_trailing_spaces = function()
-  vim.cmd([[match TrailingSpaces /\s\+$/]])
-  vim.cmd.hi("TrailingSpaces ctermbg=red guibg=red")
+  if vim.api.nvim_buf_get_name(0) ~= "" then
+    vim.cmd([[match TrailingSpaces /\s\+$/]])
+    vim.cmd.hi("TrailingSpaces ctermbg=red guibg=red")
+  end
 end
 
 local hide_trailing_spaces = function()

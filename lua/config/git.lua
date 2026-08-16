@@ -125,8 +125,8 @@ local disable_blame = function(bufnr)
   if not blame_enabled then
     vim.notify("Blame hunks already disabled", vim.log.levels.INFO)
   end
-    vim.api.nvim_buf_clear_namespace(bufnr, ns, 0, -1)
-    blame_enabled = false
+  vim.api.nvim_buf_clear_namespace(bufnr, ns, 0, -1)
+  blame_enabled = false
 end
 
 local toggle_blame = function()

@@ -27,9 +27,17 @@ require('nvim-treesitter').install({
 vim.cmd.colorscheme("tokyonight")
 vim.api.nvim_set_hl(0, "MiniIndentscopeSymbol", { link = "Comment" }) -- Color indentation line like comments
 
--- Oil file navigation
-vim.keymap.set("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
 vim.keymap.set("n", "<leader>lz", "<cmd>Lazy<cr>", { desc = "Lazy" })
+
+-- Oil file navigation
+local is_mac = vim.loop.os_uname().sysname == "Darwin"
+if is_mac then
+  vim.keymap.set("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
+else
+  vim.keymap.set("n", "=", "<CMD>Oil<CR>", { desc = "Open parent directory" })
+end
+
+vim.keymap.set("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
 
 local if_not_oil = function(fn)
   return function()
@@ -47,7 +55,7 @@ vim.keymap.set("n", "<leader>ff", custom_finds.find_files, { desc = "[F]ind [F]i
 vim.keymap.set("n", "<leader>frf", telescope_builtin.oldfiles, { desc = "[F]ind [R]ecent [F]ile" })
 vim.keymap.set("n", "<leader>fb", telescope_builtin.buffers, { desc = "[F]ind [B]uffer" })
 vim.keymap.set("n", "<leader>fnf", custom_finds.find_neovim_config_files, { desc = "[F]ind [N]eovim configuration [F]ile" })
-vim.keymap.set("n", "<leader>fc", if_not_oil(custom_finds.find_code), { desc = "[F]ind [C]ode" })
+vim.keymap.set("n", "<leader>fc", custom_finds.find_code, { desc = "[F]ind [C]ode" })
 vim.keymap.set("n", "<leader>fd", if_not_oil(custom_finds.find_definitions), { desc = "[F]ind [D]efinitions" })
 vim.keymap.set("n", "<leader>fr", if_not_oil(custom_finds.find_references), { desc = "[F]ind [R]eferences" })
 vim.keymap.set("n", "<leader>fh", telescope_builtin.help_tags, { desc = "[F]ind [H]elp" })

@@ -35,3 +35,10 @@ vim.lsp.config.ruff = {
   settings = {},
 }
 vim.lsp.enable({'ruff'})
+
+vim.lsp.config.ty = {
+  cmd = { 'ty', 'server' },
+  filetypes = { 'python' },
+  root_markers = { 'pyproject.toml', 'ty.toml', '.git' },
+}
+vim.lsp.enable({'ty'})

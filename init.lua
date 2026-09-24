@@ -4,24 +4,27 @@ require("config.autocmds")
 require("config.lsp")
 require("config.lazy") -- Loads lua/plugins/*.lua files
 
--- Treesitter setup
-require('nvim-treesitter').install({
-  "bash",
-  "c",
-  "cpp",
-  "cmake",
-  "doxygen",
-  "lua",
-  "markdown",
-  "python",
-  "rust",
-  "toml",
-  "yaml",
-  "astro",
-  "css",
-  "javascript",
-  "typescript"
-})
+if vim.fn.executable("tree-sitter") == 1 then
+  require('nvim-treesitter').install({
+    "bash",
+    "c",
+    "cpp",
+    "cmake",
+    "doxygen",
+    "lua",
+    "markdown",
+    "python",
+    "rust",
+    "toml",
+    "yaml",
+    "astro",
+    "css",
+    "javascript",
+    "typescript"
+  })
+else
+  vim.notify("Treesitter CLI not available", vim.log.levels.INFO)
+end
 
 
 vim.cmd.colorscheme("tokyonight")

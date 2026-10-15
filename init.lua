@@ -32,6 +32,9 @@ vim.api.nvim_set_hl(0, "MiniIndentscopeSymbol", { link = "Comment" }) -- Color i
 
 vim.keymap.set("n", "<leader>lz", "<cmd>Lazy<cr>", { desc = "Lazy" })
 
+vim.keymap.set("n", "<leader>nh", "<cmd>Noice history<cr>", { desc = "[N]otification [H]istory" })
+
+
 -- Oil file navigation
 local is_mac = vim.loop.os_uname().sysname == "Darwin"
 if is_mac then

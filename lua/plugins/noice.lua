@@ -31,11 +31,19 @@ return {
       },
     },
     presets = {
-      bottom_search = false,        -- use a classic bottom cmdline for search
-      command_palette = true,       -- position the cmdline and popupmenu together
-      long_message_to_split = true, -- long messages sent to a split
-      inc_rename = true,            -- incremental rename prompt
-      lsp_doc_border = true,        -- add a border to hover docs and signature help
+      bottom_search = true,
+      command_palette = true,
+      long_message_to_split = true,
+      inc_rename = true,
+      lsp_doc_border = true,
+    },
+    cmdline = {
+      view = "cmdline_popup",
+      opts = {
+        position = { row = "97%", col = "50%" },
+        size = { width = 60, height = "auto" },
+        border = { style = "rounded" },
+      },
     },
   },
 }

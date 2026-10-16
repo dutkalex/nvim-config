@@ -38,9 +38,18 @@ local format_selection = function()
   })
 end
 
+local close_floating_windows = function()
+  for _, win in ipairs(vim.api.nvim_list_wins()) do
+    if vim.api.nvim_win_get_config(win).relative ~= "" then
+      vim.api.nvim_win_close(win, true)
+    end
+  end
+end
+
 return {
     current_directory = current_directory,
     find_git_root = find_git_root,
     if_not_oil = if_not_oil,
     format_selection = format_selection,
+    close_floating_windows = close_floating_windows,
 }

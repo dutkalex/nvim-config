@@ -135,11 +135,4 @@ local terminal = require("config.terminal")
 vim.keymap.set("n", "<leader>mt", terminal.create_mini_terminal, { desc = "Open a new [M]ini [T]erminal" })
 vim.keymap.set("t", "<esc><esc>", "<c-\\><c-n>:q<CR>") -- double escape to close the mini terminal
 
-local close_floating_windows = function()
-  for _, win in ipairs(vim.api.nvim_list_wins()) do
-    if vim.api.nvim_win_get_config(win).relative ~= "" then
-      vim.api.nvim_win_close(win, true)
-    end
-  end
-end
-vim.keymap.set("n", "<Esc>", close_floating_windows, { desc = "Close floating windows" })
+vim.keymap.set("n", "<Esc>", utils.close_floating_windows, { desc = "Close floating windows" })

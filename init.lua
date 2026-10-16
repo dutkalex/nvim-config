@@ -1,5 +1,4 @@
 require("config.options")
-require("config.keymaps")
 require("config.autocmds")
 require("config.lsp")
 require("config.lazy") -- Loads lua/plugins/*.lua files
@@ -34,6 +33,46 @@ vim.keymap.set("n", "<leader>lz", "<cmd>Lazy<cr>", { desc = "Lazy" })
 
 vim.keymap.set("n", "<leader>nh", "<cmd>Noice history<cr>", { desc = "[N]otification [H]istory" })
 
+-- Shift selection
+vim.keymap.set("n", "<S-Up>",    "v<Up>",    { silent = true })
+vim.keymap.set("n", "<S-Down>",  "v<Down>",  { silent = true })
+vim.keymap.set("n", "<S-Left>",  "v<Left>",  { silent = true })
+vim.keymap.set("n", "<S-Right>", "v<Right>", { silent = true })
+
+vim.keymap.set("v", "<S-Up>",    "<Up>",    { silent = true })
+vim.keymap.set("v", "<S-Down>",  "<Down>",  { silent = true })
+vim.keymap.set("v", "<S-Left>",  "<Left>",  { silent = true })
+vim.keymap.set("v", "<S-Right>", "<Right>", { silent = true })
+
+vim.keymap.set("i", "<S-Up>",    "<Esc>v<Up>",    { silent = true })
+vim.keymap.set("i", "<S-Down>",  "<Esc>v<Down>",  { silent = true })
+vim.keymap.set("i", "<S-Left>",  "<Esc>v<Left>",  { silent = true })
+vim.keymap.set("i", "<S-Right>", "<Esc>v<Right>", { silent = true })
+
+-- Fast navigation with Alt+Arrows
+vim.keymap.set("n", "<A-Up>", ":-10<CR>")
+vim.keymap.set("n", "<A-Down>", ":+10<CR>")
+vim.keymap.set("n", "<A-Left>", "b")
+vim.keymap.set("n", "<A-Right>", "w")
+
+vim.keymap.set("n", "<C-A-Up>", "gg")
+vim.keymap.set("n", "<C-A-Down>", "G")
+vim.keymap.set("n", "<C-A-Left>", "^")
+vim.keymap.set("n", "<C-A-Right>", "$")
+
+-- Alt line moves
+vim.keymap.set("v", "<A-Up>", ":m '<-2<CR>gv=gv")
+vim.keymap.set("v", "<A-Down>", ":m '>+1<CR>gv=gv")
+
+vim.keymap.set("n", "<S-A-Up>", ":m-2<CR>")
+vim.keymap.set("n", "<S-A-Down>", ":m+1<CR>")
+
+-- Tab indents
+vim.keymap.set("v", "<Tab>", ">gv")
+vim.keymap.set("v", "<S-Tab>", "<gv")
+
+-- Jump to the last buffer
+vim.keymap.set("n", "<BS>", "<cmd>b#<CR>", { silent = true, desc = "Last buffer" })
 
 -- Oil file navigation
 local is_mac = vim.loop.os_uname().sysname == "Darwin"
@@ -42,8 +81,6 @@ if is_mac then
 else
   vim.keymap.set("n", "=", "<CMD>Oil<CR>", { desc = "Open parent directory" })
 end
-
-vim.keymap.set("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
 
 local if_not_oil = function(fn)
   return function()

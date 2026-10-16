@@ -17,7 +17,17 @@ local find_git_root = function()
   return nil
 end
 
+local if_not_oil = function(fn)
+  return function()
+    if vim.bo.filetype == "oil" then
+      return
+    end
+    fn()
+  end
+end
+
 return {
     current_directory = current_directory,
     find_git_root = find_git_root,
+    if_not_oil = if_not_oil,
 }

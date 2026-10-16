@@ -26,8 +26,21 @@ local if_not_oil = function(fn)
   end
 end
 
+local format_selection = function()
+  local start_pos = vim.api.nvim_buf_get_mark(0, "<")
+  local end_pos = vim.api.nvim_buf_get_mark(0, ">")
+
+  vim.lsp.buf.format({
+    range = {
+      ["start"] = { start_pos[1] - 1, start_pos[2] },
+      ["end"] = { end_pos[1] - 1, end_pos[2] },
+    },
+  })
+end
+
 return {
     current_directory = current_directory,
     find_git_root = find_git_root,
     if_not_oil = if_not_oil,
+    format_selection = format_selection,
 }

@@ -109,20 +109,7 @@ vim.keymap.set("n", "<leader>fk", telescope_builtin.keymaps, { desc = "[F]ind [K
 -- Edit commands (leader e)
 vim.keymap.set("n", "<leader>er", utils.if_not_oil(vim.lsp.buf.rename), { desc = "[E]dit [R]ename" })
 vim.keymap.set("n", "<leader>ef", utils.if_not_oil(vim.lsp.buf.format), { desc = "[E]dit [F]ormat" })
-
-local format_selection = function()
-  local start_pos = vim.api.nvim_buf_get_mark(0, "<")
-  local end_pos = vim.api.nvim_buf_get_mark(0, ">")
-
-  vim.lsp.buf.format({
-    range = {
-      ["start"] = { start_pos[1] - 1, start_pos[2] },
-      ["end"] = { end_pos[1] - 1, end_pos[2] },
-    },
-  })
-end
-
-vim.keymap.set("v", "<leader>ef", utils.if_not_oil(format_selection), { desc = "[E]dit [F]ormat" })
+vim.keymap.set("v", "<leader>ef", utils.if_not_oil(utils.format_selection), { desc = "[E]dit [F]ormat" })
 
 -- Diagnostics commands (leader d)
 local diag = require("config.diagnostics")

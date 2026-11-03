@@ -8,7 +8,7 @@ end
 
 local diagnostic_threshold = vim.diagnostic.severity.HINT
 
-local function config_diagnostics(new_threshold)
+local config_diagnostics = function(new_threshold)
   diagnostic_threshold = new_threshold
 
   vim.diagnostic.config({
@@ -22,7 +22,11 @@ end
 config_diagnostics(diagnostic_threshold)
 
 local function more_diagnostics()
-  if diagnostic_threshold == vim.diagnostic.severity.ERROR then
+  if not vim.diagnostic.is_enabled() then
+    vim.diagnostic.enable(true)
+    config_diagnostics(vim.diagnostic.severity.ERROR)
+    vim.notify("Enabling diagnostics (ERROR only)")
+  elseif diagnostic_threshold == vim.diagnostic.severity.ERROR then
     config_diagnostics(vim.diagnostic.severity.WARN)
     vim.notify("Showing ERROR + WARN diagnostics", vim.log.levels.INFO)
   elseif diagnostic_threshold == vim.diagnostic.severity.WARN then
@@ -46,8 +50,11 @@ local function less_diagnostics()
   elseif diagnostic_threshold == vim.diagnostic.severity.WARN then
     config_diagnostics(vim.diagnostic.severity.ERROR)
     vim.notify("Showing ERROR diagnostics", vim.log.levels.INFO)
+  elseif diagnostic_threshold == vim.diagnostic.severity.ERROR and vim.diagnostic.is_enabled() then
+    vim.diagnostic.enable(false)
+    vim.notify("Disabling diagnostics", vim.log.levels.INFO)
   else
-    vim.notify("Already showing minimal diagnostics (ERROR only)", vim.log.levels.WARN)
+    vim.notify("Diagnostics already disabled", vim.log.levels.WARN)
   end
 end
 

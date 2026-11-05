@@ -1,6 +1,7 @@
 require("config.options")
 require("config.autocmds")
 require("config.lsp")
+require("config.showcmd")
 require("config.lazy") -- Loads lua/plugins/*.lua files
 
 if vim.fn.executable("tree-sitter") == 1 then

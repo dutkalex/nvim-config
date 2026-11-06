@@ -45,6 +45,10 @@ local find_code = function(opts)
   opts.cwd = opts.cwd or utils.find_git_root()
   opts.attach_mappings = open_in_new_tab
 
+  if vim.bo.filetype == "oil" then
+    opts.cwd = require("oil").get_current_dir()
+  end
+
   local finder = finders.new_async_job {
     command_generator = function(prompt)
       if not prompt or prompt == "" then

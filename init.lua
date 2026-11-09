@@ -30,6 +30,10 @@ end
 vim.cmd.colorscheme("tokyonight")
 vim.api.nvim_set_hl(0, "MiniIndentscopeSymbol", { link = "Comment" }) -- Color indentation line like comments
 
+local ts = require("config.trailing-spaces")
+ts.auto_highlight()
+ts.auto_strip_diffs()
+
 vim.keymap.set("n", "<leader>lz", "<cmd>Lazy<cr>", { desc = "Lazy" })
 
 vim.keymap.set("n", "<leader>nh", "<cmd>Noice history<cr>", { desc = "[N]otification [H]istory" })

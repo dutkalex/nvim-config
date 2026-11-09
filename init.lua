@@ -1,5 +1,4 @@
-require("config.showcmd")
-require("config.lazy") -- Loads lua/plugins/*.lua files
+require("config.lazy")            -- Loads lua/plugins/*.lua files
 
 vim.opt.number = true             -- show line numbers
 vim.opt.scrolloff = 12            -- padding between cursor and top/bottom
@@ -19,6 +18,9 @@ lsp.enable_all()
 
 local treesitter = require("config.treesitter")
 treesitter.enable()
+
+local showcmd = require("config.floating-showcmd")
+showcmd.enable()
 
 local trailing_spaces = require("config.trailing-spaces")
 trailing_spaces.auto_highlight()

@@ -1,7 +1,9 @@
 require("config.options")
-require("config.lsp")
 require("config.showcmd")
 require("config.lazy") -- Loads lua/plugins/*.lua files
+
+local lsp = require("config.lsp")
+lsp.enable_all()
 
 local treesitter = require("config.treesitter")
 treesitter.enable()

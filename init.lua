@@ -1,38 +1,31 @@
 require("config.options")
-require("config.autocmds")
 require("config.lsp")
 require("config.showcmd")
 require("config.lazy") -- Loads lua/plugins/*.lua files
 
-if vim.fn.executable("tree-sitter") == 1 then
-  require('nvim-treesitter').install({
-    "bash",
-    "c",
-    "cpp",
-    "cmake",
-    "doxygen",
-    "lua",
-    "markdown",
-    "python",
-    "rust",
-    "toml",
-    "yaml",
-    "astro",
-    "css",
-    "javascript",
-    "typescript"
-  })
-else
-  vim.notify("Treesitter CLI not available", vim.log.levels.INFO)
-end
+local treesitter = require("config.treesitter")
+treesitter.enable()
 
+local trailing_spaces = require("config.trailing-spaces")
+trailing_spaces.auto_highlight()
+trailing_spaces.auto_strip_diffs()
+
+-- Highlight yanked text
+vim.api.nvim_create_autocmd("TextYankPost", { callback = function() vim.highlight.on_yank({ higroup = 'Search' }) end })
+
+-- Use command-mode color for the cmdline and search popups
+vim.api.nvim_create_autocmd("ColorScheme", {
+  group = vim.api.nvim_create_augroup("noice_cmdline_border", { clear = true }),
+  callback = function()
+    vim.api.nvim_set_hl(0, "NoiceCmdlinePopupBorderCmdline", { link = "DiagnosticSignWarn" })
+    vim.api.nvim_set_hl(0, "NoiceCmdlinePopupBorderSearch",  { link = "DiagnosticSignWarn" })
+    vim.api.nvim_set_hl(0, "NoiceCmdlineIconCmdline",        { link = "DiagnosticSignWarn" })
+    vim.api.nvim_set_hl(0, "NoiceCmdlineIconSearch",         { link = "DiagnosticSignWarn" })
+  end,
+})
 
 vim.cmd.colorscheme("tokyonight")
-vim.api.nvim_set_hl(0, "MiniIndentscopeSymbol", { link = "Comment" }) -- Color indentation line like comments
 
-local ts = require("config.trailing-spaces")
-ts.auto_highlight()
-ts.auto_strip_diffs()
 
 vim.keymap.set("n", "<leader>lz", "<cmd>Lazy<cr>", { desc = "Lazy" })
 

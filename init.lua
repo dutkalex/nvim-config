@@ -34,8 +34,8 @@ vim.keymap.set("n", "<leader>lz", "<cmd>Lazy<cr>", { desc = "Lazy" })
 vim.keymap.set("n", "<leader>nh", "<cmd>Noice history<cr>", { desc = "[N]otification [H]istory" })
 
 -- Navigate faster with Alt
-vim.keymap.set("n", "<A-Up>",    ":-10<CR>", { silent = true })
-vim.keymap.set("n", "<A-Down>",  ":+10<CR>", { silent = true })
+vim.keymap.set("n", "<A-Up>",   "10k", { silent = true })
+vim.keymap.set("n", "<A-Down>", "10j", { silent = true })
 
 -- Select with Shift
 vim.keymap.set("n", "<S-Up>",    "v<Up>",    { silent = true })

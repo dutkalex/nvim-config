@@ -1,6 +1,18 @@
-require("config.options")
 require("config.showcmd")
 require("config.lazy") -- Loads lua/plugins/*.lua files
+
+vim.opt.number = true             -- show line numbers
+vim.opt.scrolloff = 12            -- padding between cursor and top/bottom
+vim.opt.signcolumn = "yes"        -- always display sign column
+vim.opt.clipboard = "unnamedplus" -- use system clipboard
+vim.opt.expandtab = true          -- insert spaces instead of tabs
+vim.opt.splitbelow = true         -- open horizontal split on the bottom
+vim.opt.splitright = true         -- open vertical split on the right
+vim.opt.cursorline = true         -- highlight current line
+vim.opt.inccommand = "split"      -- show find-replaces live
+vim.opt.tabstop = 4
+vim.opt.shiftwidth = 4
+vim.opt.softtabstop = 4
 
 local lsp = require("config.lsp")
 lsp.enable_all()

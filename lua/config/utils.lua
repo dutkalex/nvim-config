@@ -1,6 +1,6 @@
 local current_directory = function()
   if vim.fn.bufname() == '' then
-    return vim.uv.cwd()  -- No file open
+    return vim.uv.cwd()           -- No file open
   else
     return vim.fn.expand('%:p:h') -- Path of the currently opened file
   end
@@ -17,6 +17,10 @@ local find_git_root = function()
   return nil
 end
 
+local highlight_yanked_text = function()
+  vim.highlight.on_yank({ higroup = 'Search' })
+end
+
 local if_not_oil = function(fn)
   return function()
     if vim.bo.filetype == "oil" then
@@ -24,6 +28,13 @@ local if_not_oil = function(fn)
     end
     fn()
   end
+end
+
+local oil_parent_dir_key = function()
+  if vim.loop.os_uname().sysname == "Darwin" then
+    return "-"
+  end
+  return "="
 end
 
 local format_selection = function()
@@ -47,9 +58,11 @@ local close_floating_windows = function()
 end
 
 return {
-    current_directory = current_directory,
-    find_git_root = find_git_root,
-    if_not_oil = if_not_oil,
-    format_selection = format_selection,
-    close_floating_windows = close_floating_windows,
+  current_directory = current_directory,
+  find_git_root = find_git_root,
+  highlight_yanked_text = highlight_yanked_text,
+  if_not_oil = if_not_oil,
+  oil_parent_dir_key = oil_parent_dir_key,
+  format_selection = format_selection,
+  close_floating_windows = close_floating_windows,
 }

@@ -26,8 +26,8 @@ local trailing_spaces = require("config.trailing-spaces")
 trailing_spaces.auto_highlight()
 trailing_spaces.auto_strip_diffs()
 
--- Highlight yanked text
-vim.api.nvim_create_autocmd("TextYankPost", { callback = function() vim.highlight.on_yank({ higroup = 'Search' }) end })
+local utils = require("config.utils")
+vim.api.nvim_create_autocmd("TextYankPost", { callback = utils.highlight_yanked_text })
 
 -- Use command-mode color for the cmdline and search popups
 vim.api.nvim_create_autocmd("ColorScheme", {
@@ -81,14 +81,7 @@ vim.keymap.set("v", "<S-Tab>", "<gv", { silent = true })
 vim.keymap.set("n", "<BS>", "<cmd>b#<CR>", { silent = true, desc = "Last buffer" })
 
 -- Oil file navigation
-local is_mac = vim.loop.os_uname().sysname == "Darwin"
-if is_mac then
-  vim.keymap.set("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
-else
-  vim.keymap.set("n", "=", "<CMD>Oil<CR>", { desc = "Open parent directory" })
-end
-
-local utils = require("config.utils")
+vim.keymap.set("n", utils.oil_parent_dir_key(), "<CMD>Oil<CR>", { desc = "Open parent directory" })
 
 -- Find commands (leader f)
 local telescope_builtin = require('telescope.builtin')

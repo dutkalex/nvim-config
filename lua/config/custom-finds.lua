@@ -33,13 +33,6 @@ local find_files = function(opts)
   telescope_builtin.find_files(opts)
 end
 
-local find_neovim_config_files = function(opts)
-  opts = opts or {}
-  opts.cwd = opts.cwd or vim.fn.stdpath("config")
-  -- opts.attach_mappings = open_in_new_tab
-  telescope_builtin.find_files(opts)
-end
-
 local find_code = function(opts)
   opts = opts or {}
   opts.cwd = opts.cwd or utils.find_git_root()
@@ -102,7 +95,6 @@ end
 
 return {
   find_files = find_files,
-  find_neovim_config_files = find_neovim_config_files,
   find_code = find_code,
   find_definitions = find_definitions,
   find_references = find_references,

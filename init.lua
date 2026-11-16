@@ -123,8 +123,10 @@ local git = require("config.git")
 vim.keymap.set("n", "<leader>gn", utils.if_not_oil(git.next_hunk), { desc = "[G]it [N]ext" })
 vim.keymap.set("n", "<leader>gp", utils.if_not_oil(git.prev_hunk), { desc = "[G]it [P]revious" })
 vim.keymap.set("n", "<leader>gd", utils.if_not_oil(git.preview_hunk_inline), { desc = "[G]it [D]iff" })
-vim.keymap.set("n", "<leader>ga", utils.if_not_oil(git.stage_hunk), { desc = "[G]it [A]dd" })
-vim.keymap.set("n", "<leader>gr", utils.if_not_oil(git.reset_hunk), { desc = "[G]it [R]eset" })
+vim.keymap.set("n", "<leader>ga", utils.if_not_oil(git.stage_hunk), { desc = "[G]it [A]dd hunk" })
+vim.keymap.set("n", "<leader>gA", utils.if_not_oil(git.stage_buffer_hunks), { desc = "[G]it [A]dd all buffer hunks" })
+vim.keymap.set("n", "<leader>gr", utils.if_not_oil(git.reset_hunk), { desc = "[G]it [R]eset hunk" })
+vim.keymap.set("n", "<leader>gR", utils.if_not_oil(git.reset_buffer_hunks), { desc = "[G]it [R]eset all buffer hunks" })
 
 -- Terminal
 local terminal = require("config.terminal")

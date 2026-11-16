@@ -126,7 +126,6 @@ vim.keymap.set("n", "<leader>gp", utils.if_not_oil(git.prev_hunk), { desc = "[G]
 vim.keymap.set("n", "<leader>gd", utils.if_not_oil(git.preview_hunk_inline), { desc = "[G]it [D]iff" })
 vim.keymap.set("n", "<leader>ga", utils.if_not_oil(git.stage_hunk), { desc = "[G]it [A]dd" })
 vim.keymap.set("n", "<leader>gr", utils.if_not_oil(git.reset_hunk), { desc = "[G]it [R]eset" })
-vim.keymap.set("n", "<leader>gb", utils.if_not_oil(git.toggle_blame), { desc = "[G]it [B]lame" })
 
 -- Terminal
 local terminal = require("config.terminal")

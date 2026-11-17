@@ -1,4 +1,6 @@
-local enable = function()
+local M = {}
+
+M.enable = function()
   -- Floating 'showcmd': shows the pending (incomplete) key sequence in the bottom-right corner.
   local buf = vim.api.nvim_create_buf(false, true)
   local win
@@ -82,6 +84,4 @@ local enable = function()
   vim.ui_attach(ns, { ext_messages = true }, handle_events)
 end
 
-return {
-  enable = enable,
-}
+return M

@@ -1,11 +1,3 @@
-local jump_next_diagnostic = function()
-  vim.diagnostic.jump({ count = 1, wrap = false })
-end
-
-local jump_prev_diagnostic = function()
-  vim.diagnostic.jump({ count = -1, wrap = false })
-end
-
 local diagnostic_threshold = vim.diagnostic.severity.HINT
 
 local config_diagnostics = function(new_threshold)
@@ -21,7 +13,15 @@ end
 
 config_diagnostics(diagnostic_threshold)
 
-local function more_diagnostics()
+local M = {}
+
+---@brief Display more diagnostics by lowering the severity threshold
+---@note By default, all diagnostics (ERROR, WARN, INFO and HINT) are displayed
+M.more_diagnostics = function()
+  if vim.bo.filetype == "oil" then
+    return
+  end
+
   if not vim.diagnostic.is_enabled() then
     vim.diagnostic.enable(true)
     config_diagnostics(vim.diagnostic.severity.ERROR)
@@ -40,7 +40,13 @@ local function more_diagnostics()
   end
 end
 
-local function less_diagnostics()
+---@brief Display less LSP diagnostics by increasing the severity threshold
+---@note By default, all diagnostics (ERROR, WARN, INFO and HINT) are displayed
+M.less_diagnostics = function()
+  if vim.bo.filetype == "oil" then
+    return
+  end
+
   if diagnostic_threshold == vim.diagnostic.severity.HINT then
     config_diagnostics(vim.diagnostic.severity.INFO)
     vim.notify("Showing ERROR + WARN + INFO diagnostics", vim.log.levels.INFO)
@@ -58,7 +64,12 @@ local function less_diagnostics()
   end
 end
 
-local show_diagnostic = function()
+---@brief Show details of the diagnostic under the cursor
+M.show_diagnostic = function()
+  if vim.bo.filetype == "oil" then
+    return
+  end
+
   vim.diagnostic.open_float({
     scope = "line",
     source = "if_many",
@@ -68,12 +79,22 @@ local show_diagnostic = function()
   vim.lsp.buf.code_action()
 end
 
-local utils = require("config.utils")
+---@brief Jump the cursor to the next diagnostic
+M.jump_next_diagnostic = function()
+  if vim.bo.filetype == "oil" then
+    return
+  end
 
-return {
-  next = utils.if_not_oil(jump_next_diagnostic),
-  prev = utils.if_not_oil(jump_prev_diagnostic),
-  more = utils.if_not_oil(more_diagnostics),
-  less = utils.if_not_oil(less_diagnostics),
-  show = utils.if_not_oil(show_diagnostic),
-}
+  vim.diagnostic.jump({ count = 1, wrap = false })
+end
+
+---@brief Jump the cursor to the previous diagnostic
+M.jump_prev_diagnostic = function()
+  if vim.bo.filetype == "oil" then
+    return
+  end
+
+  vim.diagnostic.jump({ count = -1, wrap = false })
+end
+
+return M

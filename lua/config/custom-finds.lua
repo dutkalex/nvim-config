@@ -15,7 +15,7 @@ local open_in_new_tab = function(_, map)
     actions.close(prompt_bufnr)
     vim.cmd("tabnew " .. selection.filename)
     if selection.lnum and selection.col then
-      vim.api.nvim_win_set_cursor(0, {selection.lnum, selection.col})
+      vim.api.nvim_win_set_cursor(0, { selection.lnum, selection.col })
     end
   end
 
@@ -24,8 +24,10 @@ local open_in_new_tab = function(_, map)
   return true
 end
 
+local M = {}
 
-local find_files = function(opts)
+---@brief Search files by name within the project
+M.find_files = function(opts)
   opts = opts or {}
   opts.cwd = opts.cwd or utils.find_git_root()
   opts.find_command = { "rg", "--files", "--hidden", "--glob", "!.git/*" }
@@ -33,7 +35,8 @@ local find_files = function(opts)
   telescope_builtin.find_files(opts)
 end
 
-local find_code = function(opts)
+---@brief Search file content within the project
+M.find_code = function(opts)
   opts = opts or {}
   opts.cwd = opts.cwd or utils.find_git_root()
   opts.attach_mappings = open_in_new_tab
@@ -79,23 +82,28 @@ local find_code = function(opts)
   }):find()
 end
 
-local find_definitions = function(opts)
+---@brief Find the LSP definitions for the symbol under the cursor
+M.find_definitions = function(opts)
+  if vim.bo.filetype == "oil" then
+    return
+  end
+
   opts = opts or {}
   opts.jump_type = "never"
   opts.attach_mappings = open_in_new_tab
   telescope_builtin.lsp_definitions(opts)
 end
 
-local find_references = function(opts)
+---@brief Find the LSP references for the symbol under the cursor
+M.find_references = function(opts)
+  if vim.bo.filetype == "oil" then
+    return
+  end
+
   opts = opts or {}
   opts.jump_type = "never"
   opts.attach_mappings = open_in_new_tab
   telescope_builtin.lsp_references(opts)
 end
 
-return {
-  find_files = find_files,
-  find_code = find_code,
-  find_definitions = utils.if_not_oil(find_definitions),
-  find_references = utils.if_not_oil(find_references),
-}
+return M

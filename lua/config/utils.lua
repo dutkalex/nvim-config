@@ -6,15 +6,28 @@ local current_directory = function()
   end
 end
 
-local find_git_root = function()
-  local path = current_directory()
-  while path ~= '/' do
+local normalize_dir = function(path)
+  path = vim.fn.fnamemodify(path, ':p')
+  if path ~= '/' then
+    path = path:gsub('/$', '')
+  end
+  return path
+end
+
+local git_root_from = function(path)
+  path = normalize_dir(path)
+  while path ~= '/' and path ~= '' and path ~= '.' do
     if vim.fn.isdirectory(path .. '/.git') == 1 then -- ignores git submodules
       return path
     end
     path = vim.fn.fnamemodify(path, ':h')
   end
-  return nil
+end
+
+local find_git_root = function()
+  return git_root_from(current_directory())
+      or git_root_from(vim.uv.cwd())
+      or normalize_dir(vim.uv.cwd())
 end
 
 local highlight_yanked_text = function()

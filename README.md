@@ -2,11 +2,8 @@ My personal Neovim setup, nothing particularly interesting here.
 
 # Todos / ideas
 
+- Sort results from `<leader>ff` according to a blended accuracy/frecency metric
 - Add a project-wide TODO/FIXME summary
-- Better buffers navigation and management (`fb` is not enough)
-- Extend `fk` keymap to also display builtins + filter by mode
-- Use mini.pairs (https://github.com/nvim-mini/mini.nvim/blob/main/readmes/mini-pairs.md)
-- Highlight nested scopes (fork indentscope?)
+- Extend `<leader>fk` to also display builtins and filter by mode
 - Use the telescope preview highlights
 - Highlight doxygen keywords (maybe there is already a treesitter parser for this?)
-- Have gitsigns and lsp markers on different columns?

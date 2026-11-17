@@ -68,10 +68,12 @@ local show_diagnostic = function()
   vim.lsp.buf.code_action()
 end
 
+local utils = require("config.utils")
+
 return {
-  next = jump_next_diagnostic,
-  prev = jump_prev_diagnostic,
-  more = more_diagnostics,
-  less = less_diagnostics,
-  show = show_diagnostic,
+  next = utils.if_not_oil(jump_next_diagnostic),
+  prev = utils.if_not_oil(jump_prev_diagnostic),
+  more = utils.if_not_oil(more_diagnostics),
+  less = utils.if_not_oil(less_diagnostics),
+  show = utils.if_not_oil(show_diagnostic),
 }

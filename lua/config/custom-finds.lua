@@ -96,6 +96,6 @@ end
 return {
   find_files = find_files,
   find_code = find_code,
-  find_definitions = find_definitions,
-  find_references = find_references,
+  find_definitions = utils.if_not_oil(find_definitions),
+  find_references = utils.if_not_oil(find_references),
 }

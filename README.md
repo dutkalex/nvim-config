@@ -7,3 +7,4 @@ My personal Neovim setup, nothing particularly interesting here.
 - Extend `<leader>fk` to also display builtins and filter by mode
 - Use the telescope preview highlights
 - Highlight doxygen keywords (maybe there is already a treesitter parser for this?)
+- Cleanup floating showcmd

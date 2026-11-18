@@ -17,7 +17,7 @@ local M = {}
 
 ---@brief Display more diagnostics by lowering the severity threshold
 ---@note By default, all diagnostics (ERROR, WARN, INFO and HINT) are displayed
-M.more_diagnostics = function()
+M.display_more = function()
   if vim.bo.filetype == "oil" then
     return
   end
@@ -42,7 +42,7 @@ end
 
 ---@brief Display less LSP diagnostics by increasing the severity threshold
 ---@note By default, all diagnostics (ERROR, WARN, INFO and HINT) are displayed
-M.less_diagnostics = function()
+M.display_less = function()
   if vim.bo.filetype == "oil" then
     return
   end
@@ -65,7 +65,7 @@ M.less_diagnostics = function()
 end
 
 ---@brief Show details of the diagnostic under the cursor
-M.show_diagnostic = function()
+M.show_details = function()
   if vim.bo.filetype == "oil" then
     return
   end
@@ -80,7 +80,7 @@ M.show_diagnostic = function()
 end
 
 ---@brief Jump the cursor to the next diagnostic
-M.jump_next_diagnostic = function()
+M.jump_next = function()
   if vim.bo.filetype == "oil" then
     return
   end
@@ -89,7 +89,7 @@ M.jump_next_diagnostic = function()
 end
 
 ---@brief Jump the cursor to the previous diagnostic
-M.jump_prev_diagnostic = function()
+M.jump_prev = function()
   if vim.bo.filetype == "oil" then
     return
   end

@@ -39,15 +39,40 @@ M.enable = function()
     return table.concat(parts)
   end
 
+  -- While a mapping is pending, state("m") is set. When Neovim discards an
+  -- incomplete mapping it reuses those keys as a normal command, emitting a
+  -- new showcmd (e.g. "f") with state("m") cleared. Track the previous event
+  -- so that leftover update doesn't reopen the float.
+  local was_mapping = false
+
   local handle_events = function(event, content)
-    if event ~= "msg_showcmd" or vim.api.nvim_get_mode().mode:sub(1, 1) ~= "n" then
+    if event ~= "msg_showcmd" then
       return
     end
 
     local text = get_text(content)
+    local from_mapping = vim.fn.state("m") ~= ""
 
+    -- Clearing must not depend on the current mode: completing a keymap or
+    -- discarding an incomplete one can change the mode before Neovim emits
+    -- the empty event.
     if text == "" or ignore[text] then
       close()
+      was_mapping = from_mapping
+      return
+    end
+
+    if was_mapping and not from_mapping then
+      -- Neovim is reinterpreting keys from a discarded mapping prefix.
+      was_mapping = false
+      close()
+      return
+    end
+
+    was_mapping = from_mapping
+
+    -- Only show pending commands in Normal mode.
+    if vim.api.nvim_get_mode().mode:sub(1, 1) ~= "n" then
       return
     end
 

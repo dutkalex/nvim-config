@@ -36,7 +36,8 @@ M.enable = function()
     for _, chunk in ipairs(content or {}) do
       parts[#parts + 1] = chunk[2]
     end
-    return table.concat(parts)
+    -- Neovim renders a space as "<20>"; use a visible symbol instead.
+    return (table.concat(parts):gsub("<20>", "␣"))
   end
 
   -- While a mapping is pending, state("m") is set. When Neovim discards an

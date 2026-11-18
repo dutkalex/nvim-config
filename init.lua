@@ -115,6 +115,7 @@ vim.keymap.set("n", "<leader>gp", git.prev_hunk, { desc = "[G]it [P]revious hunk
 vim.keymap.set("n", "<leader>gd", git.preview_hunk_inline, { desc = "[G]it [D]iff current hunk" })
 vim.keymap.set("n", "<leader>ga", git.stage_hunk, { desc = "[G]it [A]dd current hunk" })
 vim.keymap.set("n", "<leader>gr", git.reset_hunk, { desc = "[G]it [R]eset current hunk" })
+vim.keymap.set("n", "<leader>gD", git.preview_buffer_hunks_inline, { desc = "[G]it [D]iff all buffer hunks" })
 vim.keymap.set("n", "<leader>gA", git.stage_buffer_hunks, { desc = "[G]it [A]dd all buffer hunks" })
 vim.keymap.set("n", "<leader>gR", git.reset_buffer_hunks, { desc = "[G]it [R]eset all buffer hunks" })
 

@@ -52,6 +52,26 @@ return {
   config = function(_, opts)
     require('gitsigns').setup(opts)
 
+    local function set_word_diff_hl()
+      vim.api.nvim_set_hl(0, 'DiffAdd', { bg = '#283a2a' })
+      vim.api.nvim_set_hl(0, 'GitSignsAddInline', { bg = '#2b612d' })
+      vim.api.nvim_set_hl(0, 'DiffDelete', { bg = '#4c2a2a' })
+      vim.api.nvim_set_hl(0, 'GitSignsDeleteInline', { bg = '#792d2d' })
+      vim.api.nvim_set_hl(0, 'DiffChange', { link = 'DiffAdd' })
+      vim.api.nvim_set_hl(0, 'GitSignsAddLnInline', { link = 'GitSignsAddInline' })
+      vim.api.nvim_set_hl(0, 'GitSignsChangeInline', { link = 'GitSignsAddInline' })
+      vim.api.nvim_set_hl(0, 'GitSignsChangeLnInline', { link = 'GitSignsChangeInline' })
+      vim.api.nvim_set_hl(0, 'GitSignsDeleteLnInline', { link = 'GitSignsDeleteInline' })
+      vim.api.nvim_set_hl(0, 'GitSignsDeleteVirtLnInLine', { link = 'GitSignsDeleteInline' })
+    end
+
+    set_word_diff_hl()
+
+    vim.api.nvim_create_autocmd('ColorScheme', {
+      group = vim.api.nvim_create_augroup('GitSignsWordDiffColors', { clear = true }),
+      callback = set_word_diff_hl,
+    })
+
     local scope_blame_to_active_window = function()
       local win = vim.api.nvim_get_current_win()
       if vim.api.nvim_win_get_config(win).relative ~= '' then

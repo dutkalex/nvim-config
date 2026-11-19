@@ -19,7 +19,7 @@ return {
     -- },
     -- signs_staged_enable = true,
     -- signcolumn = true,  -- Toggle with `:Gitsigns toggle_signs`
-    numhl      = true,
+    numhl = true,
     -- linehl     = false, -- Toggle with `:Gitsigns toggle_linehl`
     -- word_diff  = false, -- Toggle with `:Gitsigns toggle_word_diff`
     -- watch_gitdir = {
@@ -52,24 +52,53 @@ return {
   config = function(_, opts)
     require('gitsigns').setup(opts)
 
-    local function set_word_diff_hl()
-      vim.api.nvim_set_hl(0, 'DiffAdd', { bg = '#283a2a' })
-      vim.api.nvim_set_hl(0, 'GitSignsAddInline', { bg = '#2b612d' })
-      vim.api.nvim_set_hl(0, 'DiffDelete', { bg = '#4c2a2a' })
-      vim.api.nvim_set_hl(0, 'GitSignsDeleteInline', { bg = '#792d2d' })
-      vim.api.nvim_set_hl(0, 'DiffChange', { link = 'DiffAdd' })
-      vim.api.nvim_set_hl(0, 'GitSignsAddLnInline', { link = 'GitSignsAddInline' })
+    local function set_diff_colors()
+      local green = '#4EB151'
+      local dark_green = '#2b612d'
+      local very_dark_green = '#283a2a'
+      -- local super_dark_green = '#1D2A1F'
+
+      local red = '#BA4545'
+      local dark_red = '#792d2d'
+      local very_dark_red = '#4c2a2a'
+      -- local super_dark_red = '#2E1919'
+
+      -- Signs column
+      vim.api.nvim_set_hl(0, 'GitSignsAdd', { fg = green })
+      vim.api.nvim_set_hl(0, 'GitSignsStagedAdd', { fg = dark_green })
+      vim.api.nvim_set_hl(0, 'GitSignsDelete', { fg = red })
+      vim.api.nvim_set_hl(0, 'GitSignsStagedDelete', { fg = dark_red })
+      vim.api.nvim_set_hl(0, 'GitSignsChange', { link = 'GitSignsAdd' })
+      vim.api.nvim_set_hl(0, 'GitSignsStagedChange', { link = 'GitSignsStagedAdd' })
+
+      -- Line numbers column
+      vim.api.nvim_set_hl(0, 'GitSignsAddNr', { link = 'GitSignsAdd' })
+      vim.api.nvim_set_hl(0, 'GitSignsStagedAddNr', { link = 'GitSignsStagedAdd' })
+      vim.api.nvim_set_hl(0, 'GitSignsDeleteNr', { link = 'GitSignsDelete' })
+      vim.api.nvim_set_hl(0, 'GitSignsStagedDeleteNr', { link = 'GitSignsStagedDelete' })
+      vim.api.nvim_set_hl(0, 'GitSignsChangeNr', { link = 'GitSignsAddNr' })
+      vim.api.nvim_set_hl(0, 'GitSignsStagedChangeNr', { link = 'GitSignsStagedAddNr' })
+
+      -- Diffs
+      vim.api.nvim_set_hl(0, 'GitSignsAddPreview', { bg = very_dark_green })
+      vim.api.nvim_set_hl(0, 'GitSignsDeletePreview', { bg = very_dark_red })
+      vim.api.nvim_set_hl(0, 'GitSignsChangePreview', { link = 'GitSignsAddPreview' })
+
+      -- Word diffs
+      vim.api.nvim_set_hl(0, 'GitSignsAddInline', { bg = dark_green })
+      vim.api.nvim_set_hl(0, 'GitSignsDeleteInline', { bg = dark_red })
       vim.api.nvim_set_hl(0, 'GitSignsChangeInline', { link = 'GitSignsAddInline' })
-      vim.api.nvim_set_hl(0, 'GitSignsChangeLnInline', { link = 'GitSignsChangeInline' })
-      vim.api.nvim_set_hl(0, 'GitSignsDeleteLnInline', { link = 'GitSignsDeleteInline' })
-      vim.api.nvim_set_hl(0, 'GitSignsDeleteVirtLnInLine', { link = 'GitSignsDeleteInline' })
+
+      local linenr = vim.api.nvim_get_hl(0, { name = "LineNr", link = false })
+      local normal = vim.api.nvim_get_hl(0, { name = "Normal", link = false })
+      local bg = linenr.bg or normal.bg
+      vim.api.nvim_set_hl(0, "GitSignsVirtLnum", { fg = bg, bg = bg })
     end
 
-    set_word_diff_hl()
-
+    set_diff_colors()
     vim.api.nvim_create_autocmd('ColorScheme', {
       group = vim.api.nvim_create_augroup('GitSignsWordDiffColors', { clear = true }),
-      callback = set_word_diff_hl,
+      callback = set_diff_colors,
     })
 
     local scope_blame_to_active_window = function()

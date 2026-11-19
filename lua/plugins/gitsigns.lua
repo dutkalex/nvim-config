@@ -8,34 +8,34 @@ local set_diff_colors = function()
   local very_dark_red = '#4c2a2a'
 
   -- Signs column
-  vim.api.nvim_set_hl(0, 'GitSignsAdd', { fg = green })
-  vim.api.nvim_set_hl(0, 'GitSignsStagedAdd', { fg = dark_green })
-  vim.api.nvim_set_hl(0, 'GitSignsDelete', { fg = red })
+  vim.api.nvim_set_hl(0, 'GitSignsAdd',          { fg = green })
+  vim.api.nvim_set_hl(0, 'GitSignsStagedAdd',    { fg = dark_green })
+  vim.api.nvim_set_hl(0, 'GitSignsDelete',       { fg = red })
   vim.api.nvim_set_hl(0, 'GitSignsStagedDelete', { fg = dark_red })
-  vim.api.nvim_set_hl(0, 'GitSignsChange', { link = 'GitSignsAdd' })
+  vim.api.nvim_set_hl(0, 'GitSignsChange',       { link = 'GitSignsAdd' })
   vim.api.nvim_set_hl(0, 'GitSignsStagedChange', { link = 'GitSignsStagedAdd' })
 
   -- Line numbers column
-  vim.api.nvim_set_hl(0, 'GitSignsAddNr', { link = 'GitSignsAdd' })
-  vim.api.nvim_set_hl(0, 'GitSignsStagedAddNr', { link = 'GitSignsStagedAdd' })
-  vim.api.nvim_set_hl(0, 'GitSignsDeleteNr', { link = 'GitSignsDelete' })
+  vim.api.nvim_set_hl(0, 'GitSignsAddNr',          { link = 'GitSignsAdd' })
+  vim.api.nvim_set_hl(0, 'GitSignsStagedAddNr',    { link = 'GitSignsStagedAdd' })
+  vim.api.nvim_set_hl(0, 'GitSignsDeleteNr',       { link = 'GitSignsDelete' })
   vim.api.nvim_set_hl(0, 'GitSignsStagedDeleteNr', { link = 'GitSignsStagedDelete' })
-  vim.api.nvim_set_hl(0, 'GitSignsChangeNr', { link = 'GitSignsAddNr' })
+  vim.api.nvim_set_hl(0, 'GitSignsChangeNr',       { link = 'GitSignsAddNr' })
   vim.api.nvim_set_hl(0, 'GitSignsStagedChangeNr', { link = 'GitSignsStagedAddNr' })
 
   -- Side-by-side diffs
-  vim.api.nvim_set_hl(0, 'DiffAdd', { bg = very_dark_green })
+  vim.api.nvim_set_hl(0, 'DiffAdd',    { bg = very_dark_green })
   vim.api.nvim_set_hl(0, 'DiffDelete', { bg = very_dark_red })
   vim.api.nvim_set_hl(0, 'DiffChange', { link = 'DiffAdd' })
-  vim.api.nvim_set_hl(0, 'DiffText', { bg = dark_green })
+  vim.api.nvim_set_hl(0, 'DiffText',   { bg = dark_green })
 
   -- Unified diffs
-  vim.api.nvim_set_hl(0, 'GitSignsAddPreview', { bg = very_dark_green })
+  vim.api.nvim_set_hl(0, 'GitSignsAddPreview',    { bg = very_dark_green })
   vim.api.nvim_set_hl(0, 'GitSignsDeletePreview', { bg = very_dark_red })
   vim.api.nvim_set_hl(0, 'GitSignsChangePreview', { link = 'GitSignsAddPreview' })
-  vim.api.nvim_set_hl(0, 'GitSignsAddInline', { bg = dark_green })
-  vim.api.nvim_set_hl(0, 'GitSignsDeleteInline', { bg = dark_red })
-  vim.api.nvim_set_hl(0, 'GitSignsChangeInline', { link = 'GitSignsAddInline' })
+  vim.api.nvim_set_hl(0, 'GitSignsAddInline',     { bg = dark_green })
+  vim.api.nvim_set_hl(0, 'GitSignsDeleteInline',  { bg = dark_red })
+  vim.api.nvim_set_hl(0, 'GitSignsChangeInline',  { link = 'GitSignsAddInline' })
 
   -- No line numbers on (virtual) deleted lines
   local linenr = vim.api.nvim_get_hl(0, { name = "LineNr", link = false })
@@ -68,7 +68,7 @@ return {
 
     set_diff_colors()
     vim.api.nvim_create_autocmd('ColorScheme', {
-      group = vim.api.nvim_create_augroup('GitSignsWordDiffColors', { clear = true }),
+      group = vim.api.nvim_create_augroup('GitSignsDiffColors', { clear = true }),
       callback = set_diff_colors,
     })
 

@@ -47,15 +47,19 @@ return {
       vim.api.nvim_set_hl(0, 'GitSignsChangeNr', { link = 'GitSignsAddNr' })
       vim.api.nvim_set_hl(0, 'GitSignsStagedChangeNr', { link = 'GitSignsStagedAddNr' })
 
-      -- Diffs
+      -- Unified diffs
       vim.api.nvim_set_hl(0, 'GitSignsAddPreview', { bg = very_dark_green })
       vim.api.nvim_set_hl(0, 'GitSignsDeletePreview', { bg = very_dark_red })
       vim.api.nvim_set_hl(0, 'GitSignsChangePreview', { link = 'GitSignsAddPreview' })
-
-      -- Word diffs
       vim.api.nvim_set_hl(0, 'GitSignsAddInline', { bg = dark_green })
       vim.api.nvim_set_hl(0, 'GitSignsDeleteInline', { bg = dark_red })
       vim.api.nvim_set_hl(0, 'GitSignsChangeInline', { link = 'GitSignsAddInline' })
+
+      -- Side-by-side diffs
+      vim.api.nvim_set_hl(0, 'DiffAdd', { bg = very_dark_green })
+      vim.api.nvim_set_hl(0, 'DiffDelete', { fg = very_dark_red, bg = very_dark_red })
+      vim.api.nvim_set_hl(0, 'DiffChange', { link = 'DiffAdd' })
+      vim.api.nvim_set_hl(0, 'DiffText', { bg = dark_green })
 
       -- No line numbers on (virtual) deleted lines
       local linenr = vim.api.nvim_get_hl(0, { name = "LineNr", link = false })
